@@ -28,6 +28,8 @@ Before the alert text-to-speech will work, you'll need to add a Streamlabs Socke
 - Paste this value into the **Streamlabs Socket Token** setting in the chatbot
 - Click the *Save Settings* button at the bottom of the script settings
 
+***
+
 # Setting Information
 
 All settings have extra information if you hover over the field in the chatbot. Below is a summarized list of settings.
@@ -75,16 +77,16 @@ Set the number of seconds before the TTS command can be used again.
 
 ### Cooldown Response
 The message that the bot will display when the command is on cooldown.
-- {user} will be replaced with the viewer's username
-- {cooldown} will be replaced with the time remaining
+- *{user}* will be replaced with the viewer's username
+- *{cooldown}* will be replaced with the time remaining
 
 ### User cooldown in seconds
 Set the number of seconds before a user can use the TTS command again.
 
 ### User Cooldown Response
 The message that the bot will display when the command is on user cooldown
-- {user} will be replaced with the viewer's username
-- {cooldown} will be replaced with the time remaining
+- *{user}* will be replaced with the viewer's username
+- *{cooldown}* will be replaced with the time remaining
 
 ## TTS Chat Messages
 In this section, you can toggle text-to-speech for ALL chat messages
@@ -121,6 +123,8 @@ The format of the alert to be read by text-to-speech. There are a number of vari
 
 ### Streamlabs Socket Token
 **Your Socket API Token** from https://streamlabs.com/dashboard#/settings/api-settings. See the *Usage* section for details.
+
+***
 
 # Copyright
 
