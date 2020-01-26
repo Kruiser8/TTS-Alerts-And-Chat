@@ -1,0 +1,540 @@
+{
+  "output_file": "settings.json",
+  "VoiceName": {
+    "type": "dropdown",
+    "value": "",
+    "items": [],
+    "label": "Voice Name",
+    "tooltip": "Set the voice to use for TTS",
+    "group": "Text-To-Speech Settings"
+  },
+  "Volume": {
+    "type": "slider",
+    "label": "Volume",
+    "value": 80,
+    "min": 0,
+    "max": 100,
+    "ticks": 1,
+    "tooltip": "Set the volume of the TTS",
+    "group": "Text-To-Speech Settings"
+  },
+  "Rate": {
+    "type": "slider",
+    "label": "Speaking Rate",
+    "value": 0,
+    "min": -10,
+    "max": 10,
+    "ticks": 1,
+    "tooltip": "Set the speaking rate of the TTS",
+    "group": "Text-To-Speech Settings"
+  },
+  "TTSCommand": {
+    "type": "textbox",
+    "value": "!tts",
+    "label": "Command Name",
+    "tooltip": "The command used to trigger tts",
+    "group": "TTS Command"
+  },
+  "TTSCommandPermission": {
+    "type": "dropdown",
+    "value": "Caster",
+    "items": [
+      "Everyone",
+      "Regular",
+      "VIP Exclusive",
+      "VIP+",
+      "Subscriber",
+      "GameWisp Subscriber",
+      "User_Specific",
+      "Min_Rank",
+      "Min_Points",
+      "Min_Hours",
+      "Moderator",
+      "Editor",
+      "Caster"
+    ],
+    "label": "Permission level",
+    "tooltip": "Set the permission level for the command",
+    "group": "TTS Command"
+  },
+  "TTSCommandPermissionInfo": {
+    "type": "textbox",
+    "value": "",
+    "label": "Permission level info",
+    "tooltip": "Set the user, rank, or tier for permission",
+    "group": "TTS Command"
+  },
+  "TTSCommandCost": {
+    "type": "numberbox",
+    "label": "Cost (Points)",
+    "value": 500,
+    "tooltip": "The number of points required to use the command",
+    "group": "TTS Command"
+  },
+  "TTSCommandMessage": {
+    "type": "textbox",
+    "value": "{user} says, {message}",
+    "label": "TTS Message Format",
+    "tooltip": "The message that the bot will read when the command is used. \r\n {user} = username\r\n {message} = the chat message",
+    "group": "TTS Command"
+  },
+  "TTSUseCD": {
+    "type": "checkbox",
+    "value": false,
+    "label": "Use Cooldown Message",
+    "tooltip": "Enable to display a message when the TTS command is on cooldown.",
+    "group": "TTS Cooldown"
+  },
+  "TTSCasterCD": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Caster ignores cooldown",
+    "tooltip": "Enable/Disable cooldown for caster",
+    "group": "TTS Cooldown"
+  },
+  "TTSCooldown": {
+    "type": "numberbox",
+    "label": "Cooldown (seconds)",
+    "value": 0,
+    "tooltip": "Cooldown in seconds.",
+    "group": "TTS Cooldown"
+  },
+  "TTSOnCooldown": {
+    "type": "textbox",
+    "value": "{user} the command is still on cooldown for {cooldown} seconds!",
+    "label": "Cooldown Response",
+    "tooltip": "The message that the bot will display when the command is on cooldown. \r\n {user} = username\r\n {cooldown} = time remaining",
+    "group": "TTS Cooldown"
+  },
+  "TTSUserCooldown": {
+    "type": "numberbox",
+    "label": "User Cooldown (seconds)",
+    "value": 10,
+    "tooltip": "User cooldown in seconds.",
+    "group": "TTS Cooldown"
+  },
+  "TTSOnUserCooldown": {
+    "type": "textbox",
+    "value": "{user} the command is still on user cooldown for {cooldown} seconds!",
+    "label": "User Cooldown Response",
+    "tooltip": "The message that the bot will display when the command is on user cooldown.\r\n {user} = username\r\n {cooldown} = time remaining",
+    "group": "TTS Cooldown"
+  },
+  "TTSAllChat": {
+    "type": "checkbox",
+    "value": false,
+    "label": "TTS All Chat Messages",
+    "tooltip": "Enable to use text-to-speech for all messages",
+    "group": "TTS Chat Messages"
+  },
+  "TTSAllChatMessage": {
+    "type": "textbox",
+    "value": "{user} says, {message}",
+    "label": "TTS Message Format",
+    "tooltip": "The message that the bot will read for every chat message. \r\n {user} = username\r\n {message} = the chat message",
+    "group": "TTS Chat Messages"
+  },
+  "MixerOnFollow": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for follow alerts",
+    "group": "Mixer Follows"
+  },
+  "MixerFollowDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Mixer Follows"
+  },
+  "MixerFollowMessage": {
+    "type": "textbox",
+    "label": "Follow Alert Message",
+    "value": "{name} has followed.",
+    "tooltip": "The alert format.\r\n{name} = Follower Username",
+    "group": "Mixer Follows"
+  },
+  "MixerOnHost": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for host alerts",
+    "group": "Mixer Hosts"
+  },
+  "MixerHostMinimum": {
+    "type": "numberbox",
+    "label": "Minimum Viewers for TTS",
+    "value": 0,
+    "tooltip": "Minimum viewers to read the alert",
+    "group": "Mixer Hosts"
+  },
+  "MixerHostDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Mixer Hosts"
+  },
+  "MixerHostMessage": {
+    "type": "textbox",
+    "label": "Host Alert Message",
+    "value": "{name} has hosted you with {amount} viewer{isPlural}.",
+    "tooltip": "The alert format.\r\n{name} = Host Username\r\n{amount} = Number of viewers\r\n{isPlural} = Adds an 's' if amount > 1",
+    "group": "Mixer Hosts"
+  },
+  "MixerOnSub": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for subscriber alerts",
+    "group": "Mixer Subscribers"
+  },
+  "MixerIncludeSubMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Include Message",
+    "tooltip": "Check this to enable TTS for subscriber messages included with alerts",
+    "group": "Mixer Subscribers"
+  },
+  "MixerSubDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Mixer Subscribers"
+  },
+  "MixerSubMessage": {
+    "type": "textbox",
+    "label": "Sub (1 month) Alert Message",
+    "value": "{name} has subscribed ({tier}).",
+    "tooltip": "The alert format.\r\n{name} = Sub Username\r\n{tier} = Subscription tier (Prime, Tier 1, 2, 3)",
+    "group": "Mixer Subscribers"
+  },
+  "MixerResubMessage": {
+    "type": "textbox",
+    "label": "Resubscriber Alert Message",
+    "value": "{name} has resubscribed ({tier}) for {months} months.",
+    "tooltip": "The alert format.\r\n{name} = Sub Username\r\n{tier} = Subscription tier (Prime, Tier 1, 2, 3)\r\n{months} = Number of months subscribed",
+    "group": "Mixer Subscribers"
+  },
+  "StreamlabsOnDonation": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for donation alerts",
+    "group": "Streamlabs Donations"
+  },
+  "StreamlabsIncludeDonationMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Include Message",
+    "tooltip": "Check this to enable TTS for donation messages included with alerts",
+    "group": "Streamlabs Donations"
+  },
+  "StreamlabsDonationMinimum": {
+    "type": "numberbox",
+    "label": "Minimum Donation for TTS",
+    "value": 5,
+    "tooltip": "Minimum amount to read the alert",
+    "group": "Streamlabs Donations"
+  },
+  "StreamlabsDonationDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Streamlabs Donations"
+  },
+  "StreamlabsDonationMessage": {
+    "type": "textbox",
+    "label": "Donation Alert Message",
+    "value": "{name} donated {amount}.",
+    "tooltip": "The alert format.\r\n{name} = Donator Username\r\n{amount} = Amount of money donated",
+    "group": "Streamlabs Donations"
+  },
+  "TwitchOnCheer": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for cheer alerts",
+    "group": "Twitch Bits"
+  },
+  "TwitchIncludeCheerMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Include Message",
+    "tooltip": "Check this to enable TTS for messages included with bit alerts",
+    "group": "Twitch Bits"
+  },
+  "TwitchCheerMinimum": {
+    "type": "numberbox",
+    "label": "Minimum Bits for TTS",
+    "value": 100,
+    "tooltip": "Minimum bits to read the alert",
+    "group": "Twitch Bits"
+  },
+  "TwitchCheerDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Twitch Bits"
+  },
+  "TwitchCheerMessage": {
+    "type": "textbox",
+    "label": "Bits Alert Message",
+    "value": "{name} has used {amount} bit{isPlural}.",
+    "tooltip": "The alert format.\r\n{name} = Cheerer Username\r\n{amount} = Number of bits\r\n{isPlural} = Adds an 's' if amount > 1",
+    "group": "Twitch Bits"
+  },
+  "TwitchOnFollow": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for follow alerts",
+    "group": "Twitch Follows"
+  },
+  "TwitchFollowDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Twitch Follows"
+  },
+  "TwitchFollowMessage": {
+    "type": "textbox",
+    "label": "Follow Alert Message",
+    "value": "{name} has followed.",
+    "tooltip": "The alert format.\r\n{name} = Follower Username",
+    "group": "Twitch Follows"
+  },
+  "TwitchOnHost": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for host alerts",
+    "group": "Twitch Hosts"
+  },
+  "TwitchHostMinimum": {
+    "type": "numberbox",
+    "label": "Minimum Viewers for TTS",
+    "value": 0,
+    "tooltip": "Minimum viewers to read the alert",
+    "group": "Twitch Hosts"
+  },
+  "TwitchHostDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Twitch Hosts"
+  },
+  "TwitchHostMessage": {
+    "type": "textbox",
+    "label": "Host Alert Message",
+    "value": "{name} has hosted you with {amount} viewer{isPlural}.",
+    "tooltip": "The alert format.\r\n{name} = Host Username\r\n{amount} = Number of viewers\r\n{isPlural} = Adds an 's' if amount > 1",
+    "group": "Twitch Hosts"
+  },
+  "TwitchOnRaid": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for raid alerts",
+    "group": "Twitch Raids"
+  },
+  "TwitchRaidMinimum": {
+    "type": "numberbox",
+    "label": "Minimum Raiders for TTS",
+    "value": 0,
+    "tooltip": "Minimum raiders to read the alert",
+    "group": "Twitch Raids"
+  },
+  "TwitchRaidDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Twitch Raids"
+  },
+  "TwitchRaidMessage": {
+    "type": "textbox",
+    "label": "Raid Alert Message",
+    "value": "{name} has raided you with a party of {amount}.",
+    "tooltip": "The alert format.\r\n{name} = Raider Username\r\n{amount} = Number of raiders",
+    "group": "Twitch Raids"
+  },
+  "TwitchOnSub": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for subscriber alerts",
+    "group": "Twitch Subscribers"
+  },
+  "TwitchIncludeSubMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Include Message",
+    "tooltip": "Check this to enable TTS for subscriber messages included with alerts",
+    "group": "Twitch Subscribers"
+  },
+  "TwitchSubDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Twitch Subscribers"
+  },
+  "TwitchSubMessage": {
+    "type": "textbox",
+    "label": "Sub (1 month) Alert Message",
+    "value": "{name} has subscribed ({tier}).",
+    "tooltip": "The alert format.\r\n{name} = Sub Username\r\n{tier} = Subscription tier (Prime, Tier 1, 2, 3)",
+    "group": "Twitch Subscribers"
+  },
+  "TwitchResubMessage": {
+    "type": "textbox",
+    "label": "Resubscriber Alert Message",
+    "value": "{name} has resubscribed ({tier}) for {months} months.",
+    "tooltip": "The alert format.\r\n{name} = Sub Username\r\n{tier} = Subscription tier (Prime, Tier 1, 2, 3)\r\n{months} = Number of months subscribed",
+    "group": "Twitch Subscribers"
+  },
+  "TwitchGiftMessage": {
+    "type": "textbox",
+    "label": "Gift Sub Alert Message",
+    "value": "{gifter} has gifted a sub ({tier}) to {name} ({months} month{isPlural}).",
+    "tooltip": "The alert format.\r\n{gifter} = Gifter's Username\r\n{name} = Sub Username\r\n{tier} = Subscription tier (Prime, Tier 1, 2, 3)\r\n{months} = Number of months subscribed\r\n{isPlural} = Adds an 's' if months > 1",
+    "group": "Twitch Subscribers"
+  },
+  "YoutubeOnFollow": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for follow alerts",
+    "group": "Youtube Follows (Subscriptions)"
+  },
+  "YoutubeFollowDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Youtube Follows (Subscriptions)"
+  },
+  "YoutubeFollowMessage": {
+    "type": "textbox",
+    "label": "Follow (subscriber) Alert Message",
+    "value": "{name} has followed.",
+    "tooltip": "The alert format.\r\n{name} = Follower Username",
+    "group": "Youtube Follows (Subscriptions)"
+  },
+  "YoutubeOnSub": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for subscriber alerts",
+    "group": "Youtube Subscribers (Sponsors)"
+  },
+  "YoutubeIncludeSubMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Include Message",
+    "tooltip": "Check this to enable TTS for subscriber messages included with alerts",
+    "group": "Youtube Subscribers (Sponsors)"
+  },
+  "YoutubeSubDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Youtube Subscribers (Sponsors)"
+  },
+  "YoutubeSubMessage": {
+    "type": "textbox",
+    "label": "Subscriber (Sponsor) 1 month Alert Message",
+    "value": "{name} has subscribed ({tier}).",
+    "tooltip": "The alert format.\r\n{name} = Sub Username\r\n{tier} = Subscription tier (Prime, Tier 1, 2, 3)",
+    "group": "Youtube Subscribers (Sponsors)"
+  },
+  "YoutubeResubMessage": {
+    "type": "textbox",
+    "label": "Resubscriber Alert Message",
+    "value": "{name} has resubscribed ({tier}) for {months} months.",
+    "tooltip": "The alert format.\r\n{name} = Sub Username\r\n{tier} = Subscription tier (Prime, Tier 1, 2, 3)\r\n{months} = Number of months subscribed",
+    "group": "Youtube Subscribers (Sponsors)"
+  },
+  "YoutubeOnSuperchat": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Enabled",
+    "tooltip": "Check this to enable TTS for superchat alerts",
+    "group": "Youtube Superchat"
+  },
+  "YoutubeIncludeSuperchatMessage": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Include Message",
+    "tooltip": "Check this to enable TTS for donation messages included with alerts",
+    "group": "Youtube Superchat"
+  },
+  "YoutubeSuperchatMinimum": {
+    "type": "numberbox",
+    "label": "Minimum Superchat amount for TTS",
+    "value": 5,
+    "tooltip": "Minimum amount to read the alert",
+    "group": "Youtube Superchat"
+  },
+  "YoutubeSuperchatDelay": {
+    "type": "numberbox",
+    "label": "Delay (seconds)",
+    "value": 0,
+    "tooltip": "Number of seconds to delay reading the alert",
+    "group": "Youtube Superchat"
+  },
+  "YoutubeSuperchatMessage": {
+    "type": "textbox",
+    "label": "Donation Alert Message",
+    "value": "{name} donated {amount}.",
+    "tooltip": "The alert format.\r\n{name} = Donator Username\r\n{amount} = Amount of money donated",
+    "group": "Youtube Superchat"
+  },
+  "SocketToken": {
+    "type": "textbox",
+    "label": "Streamlabs Socket Token",
+    "value": "",
+    "tooltip": "The Streamlabs Socket Token.\r\nThis can be found on the streamlabs website via the left-hand side menu -> API Settings -> API Tokens.",
+    "group": "Streamlabs Token"
+  },
+  "OpenSocketToken": {
+    "type": "button",
+    "label": "Open Streamlabs API Settings",
+    "tooltip": "Opens the API Settings for Streamlabs",
+    "function": "OpenSocketToken",
+    "wsevent": "",
+    "group": "Streamlabs Token"
+  },
+  "OpenGithubRepository": {
+    "type": "button",
+    "label": "GitHub Repository",
+    "tooltip": "Opens the Github Repository",
+    "function": "OpenGithubRepository",
+    "wsevent": "",
+    "group": "Author"
+  },
+  "OpenTwitter": {
+    "type": "button",
+    "label": "Kruiser8 Twitter",
+    "tooltip": "Opens the Twitter for the author",
+    "function": "OpenTwitter",
+    "wsevent": "",
+    "group": "Author"
+  },
+  "OpenReadMe": {
+    "type": "button",
+    "label": "Open README.txt",
+    "tooltip": "Opens the README.txt for this script",
+    "function": "OpenReadMe",
+    "wsevent": "",
+    "group": "ReadMe"
+  }
+}
