@@ -1,10 +1,14 @@
 # TTS Alerts And Chat
 
-TTS Alerts And Chat is a script that provides text-to-speech capabilities for streamlabs alerts, chat messages, and a customizable command.
+TTS Alerts And Chat is a Streamlabs Chatbot script that provides text-to-speech capabilities for Streamlabs alerts, chat messages, and a customizable command.
 
 The text-to-speech uses your computer's narrator voice and has some customization for voice, volume, and speech rate.
 
 Feel free to reach out to me in the Streamlabs Chatbot discord (@Kruiser8) or on Twitter (@Kruiser8) with any questions or feedback.
+
+# Credits
+
+Thanks to [Ocgineer](https://github.com/ocgineer) for his [Streamlabs Event Receiver](https://github.com/ocgineer/Streamlabs-Events-Receiver) that allows events to be caught in a Streamlabs Chatbot script.
 
 # Installation
 
