@@ -16,7 +16,7 @@ import codecs
 import json
 from collections import OrderedDict
 import time
-
+import threading
 import clr
 clr.AddReference("IronPython.Modules.dll")
 clr.AddReference('System.Speech')
@@ -322,18 +322,22 @@ def updateUIConfig():
 
 	UIConfigs.Save(UIConfigFile)
 
-def SendTTSMessage(message):
-	Parent.Log(ScriptName, message)
-	global spk
-	spk.Speak(message)
+def SendTTSMessage(voice, message):
+	try:
+		Parent.Log(ScriptName, message)
+		voice.Speak(message)
+	except Exception as e:
+		Parent.SendStreamWhisper(Parent.GetChannelName(), 'TTS Failed, please see logs')
+		Parent.Log(ScriptName, str(e.args))
 
 def SendTTSMessagesWithDelay(message, delay, includeExtra = False, extraMessage = ''):
 	if delay > 0:
 		time.sleep(delay)
 
-	SendTTSMessage(message)
+	global spk
+	SendTTSMessage(spk, message)
 	if includeExtra:
-		SendTTSMessage(extraMessage)
+		SendTTSMessage(spk, extraMessage)
 
 #---------------------------------------
 # Chatbot Initialize Function
@@ -393,9 +397,11 @@ def Execute(data):
 
 	if data.IsChatMessage():
 		if ScriptSettings.TTSAllChat:
-			message = ScriptSettings.TTSAllChatMessage.format(user=data.UserName, message=data.Message)
-			SendTTSMessage(message)
-
+			if not ScriptSettings.TTSAllChatExcludeCommands or data.Message[0] != '!':
+				message = ScriptSettings.TTSAllChatMessage.format(user=data.UserName, message=data.Message)
+				messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message))
+				messageThread.daemon = True
+				messageThread.start()
 		else:
 			command = data.GetParam(0)
 
@@ -405,7 +411,9 @@ def Execute(data):
 						if HasCurrency(data, ScriptSettings.TTSCommandCost):
 							commandOffset = len(ScriptSettings.TTSCommand) + 1
 							message = ScriptSettings.TTSCommandMessage.format(user=data.UserName, message=data.Message[commandOffset:])
-							SendTTSMessage(message)
+							messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message))
+							messageThread.daemon = True
+							messageThread.start()
 
 							Parent.AddUserCooldown(ScriptName, ScriptSettings.TTSCommand, data.User, ScriptSettings.TTSUserCooldown)
 	    					Parent.AddCooldown(ScriptName, ScriptSettings.TTSCommand, ScriptSettings.TTSCooldown)

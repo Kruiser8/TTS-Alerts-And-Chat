@@ -94,6 +94,9 @@ In this section, you can toggle text-to-speech for ALL chat messages
 ### TTS All Chat Messages
 Enable Text-To-Speech for all messages
 
+### Exclude Reading Commands
+Exclude reading messages that start with an exclamation point (!).
+
 ### TTS Message Format
 Customize the message read by the narrator. The following variables will get replaced.
 - *{user}* will be replaced with the viewer's username

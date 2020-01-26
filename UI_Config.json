@@ -127,6 +127,13 @@
     "tooltip": "Enable to use text-to-speech for all messages",
     "group": "TTS Chat Messages"
   },
+  "TTSAllChatExcludeCommands": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Exclude Reading Commands",
+    "tooltip": "Exclude reading messages that start with an exclamation point (!).",
+    "group": "TTS Chat Messages"
+  },
   "TTSAllChatMessage": {
     "type": "textbox",
     "value": "{user} says, {message}",
