@@ -64,8 +64,8 @@ class Settings(object):
 				self.__dict__ = json.load(f, encoding="utf-8")
 		except:
 			self.VoiceName = ""
-			self.Volume = 80.0
-			self.Rate = 0.0
+			self.Volume = 80
+			self.Rate = 0
 			self.TTSCommand = "!tts"
 			self.TTSCommandPermission = "Caster"
 			self.TTSCommandPermissionInfo = ""
