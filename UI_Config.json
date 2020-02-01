@@ -143,7 +143,7 @@
   },
   "MixerOnFollow": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for follow alerts",
     "group": "Mixer Follows"
@@ -164,7 +164,7 @@
   },
   "MixerOnHost": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for host alerts",
     "group": "Mixer Hosts"
@@ -192,7 +192,7 @@
   },
   "MixerOnSub": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for subscriber alerts",
     "group": "Mixer Subscribers"
@@ -227,7 +227,7 @@
   },
   "StreamlabsOnDonation": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for donation alerts",
     "group": "Streamlabs Donations"
@@ -262,7 +262,7 @@
   },
   "TwitchOnCheer": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for cheer alerts",
     "group": "Twitch Bits"
@@ -297,7 +297,7 @@
   },
   "TwitchOnFollow": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for follow alerts",
     "group": "Twitch Follows"
@@ -318,7 +318,7 @@
   },
   "TwitchOnHost": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for host alerts",
     "group": "Twitch Hosts"
@@ -346,7 +346,7 @@
   },
   "TwitchOnRaid": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for raid alerts",
     "group": "Twitch Raids"
@@ -374,7 +374,7 @@
   },
   "TwitchOnSub": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for subscriber alerts",
     "group": "Twitch Subscribers"
@@ -416,7 +416,7 @@
   },
   "YoutubeOnFollow": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for follow alerts",
     "group": "Youtube Follows (Subscriptions)"
@@ -437,7 +437,7 @@
   },
   "YoutubeOnSub": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for subscriber alerts",
     "group": "Youtube Subscribers (Sponsors)"
@@ -472,7 +472,7 @@
   },
   "YoutubeOnSuperchat": {
     "type": "checkbox",
-    "value": true,
+    "value": false,
     "label": "Enabled",
     "tooltip": "Check this to enable TTS for superchat alerts",
     "group": "Youtube Superchat"
