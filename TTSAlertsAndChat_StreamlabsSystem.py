@@ -389,8 +389,22 @@ def ReloadSettings(jsondata):
 	spk.Rate = ScriptSettings.Rate
 	spk.Volume = ScriptSettings.Volume
 
+	global EventReceiver
+	if not EventReceiver.IsConnected and ScriptSettings.SocketToken:
+		EventReceiver.Connect(ScriptSettings.SocketToken)
+	elif EventReceiver.IsConnected and not ScriptSettings.SocketToken:
+		EventReceiver.Disconnect()
+
 	# End of ReloadSettings
 	return
+
+#---------------------------------------
+#	Chatbot Script Unload Function
+#---------------------------------------
+def Unload():
+	global EventReceiver
+	if EventReceiver.IsConnected:
+		EventReceiver.Disconnect()
 
 #---------------------------------------
 # Chatbot Execute Function
