@@ -4,7 +4,7 @@ TTS Alerts And Chat is a Streamlabs Chatbot script that provides text-to-speech 
 
 The text-to-speech uses your computer's narrator voice and has some customization for voice, volume, and speech rate.
 
-Feel free to reach out to me in the Streamlabs Chatbot discord (@Kruiser8) or on Twitter (@Kruiser8) with any questions or feedback.
+Feel free to reach out to me in the [Streamlabs Chatbot discord](https://discord.gg/xFcsxft) (@Kruiser8) or on Twitter ([@Kruiser8](https://twitter.com/kruiser8)) with any questions or feedback.
 
 # Credits
 
@@ -121,6 +121,7 @@ The format of the alert to be read by text-to-speech. There are a number of vari
 - *{tier}* is the Twitch subscription tier
 - *{months}* is the number of months of a subscription
 - *{gifter}* is the gifter of a Twitch sub
+- *{recipients}* is the comma-delimited list of viewers that are gifted subs when more than 1 sub is gifted to the channel
 
 ## Streamlabs Token
 

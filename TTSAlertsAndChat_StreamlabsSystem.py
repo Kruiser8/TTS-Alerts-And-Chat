@@ -119,6 +119,7 @@ class Settings(object):
 			self.TwitchSubMessage = "{name} has subscribed ({tier})."
 			self.TwitchResubMessage = "{name} has resubscribed ({tier}) for {months} months."
 			self.TwitchGiftMessage = "{gifter} has gifted a sub ({tier}) to {name} ({months} month{isPlural})."
+			self.TwitchGiftMassMessage = "{gifter} has gifted {amount} subs to the channel: {recipients}."
 			self.YoutubeOnFollow = False
 			self.YoutubeFollowDelay = 0
 			self.YoutubeFollowMessage = "{name} has followed."
@@ -226,20 +227,27 @@ def handleEvent(sender, args):
 		# This is a Twitch subscription event
 		elif evntdata.Type == "subscription" and ScriptSettings.TwitchOnSub:
 			s = ''
-			for message in evntdata.Message:
-				tier = SubPlanMap[str(message.SubPlan)]
-				ttsMessage = ''
-				if message.Gifter:
-					if message.Months > 1:
-						s = 's'
+			if len(evntData.Message) > 1 and evntData.Message[0].Gifter:
+				names = []
+				for message in evntdata.Message:
+					names.append(message.Name)
+				giftees = ', '.join(names)
+				ttsMessage = ScriptSettings.TwitchGiftMassMessage.format(recipients=giftees, gifter=message.Gifter, amount=len(names))
+			else:
+				for message in evntdata.Message:
+					tier = SubPlanMap[str(message.SubPlan)]
+					ttsMessage = ''
+					if message.Gifter:
+						if message.Months > 1:
+							s = 's'
+						else:
+							s = ''
+						ttsMessage = ScriptSettings.TwitchGiftMessage.format(name=message.Name, gifter=message.Gifter, tier=tier, months=message.Months, isPlural=s)
 					else:
-						s = ''
-					ttsMessage = ScriptSettings.TwitchGiftMessage.format(name=message.Name, gifter=message.Gifter, tier=tier, months=message.Months, isPlural=s)
-				else:
-					if message.Months == 1:
-						ttsMessage = ScriptSettings.TwitchSubMessage.format(name=message.Name, tier=tier, months=message.Months)
-					else:
-						ttsMessage = ScriptSettings.TwitchResubMessage.format(name=message.Name, tier=tier, months=message.Months)
+						if message.Months == 1:
+							ttsMessage = ScriptSettings.TwitchSubMessage.format(name=message.Name, tier=tier, months=message.Months)
+						else:
+							ttsMessage = ScriptSettings.TwitchResubMessage.format(name=message.Name, tier=tier, months=message.Months)
 
 				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchSubDelay, ScriptSettings.TwitchIncludeSubMessage, message.Message)
 

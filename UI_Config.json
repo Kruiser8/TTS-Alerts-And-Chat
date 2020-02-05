@@ -414,6 +414,13 @@
     "tooltip": "The alert format.\r\n{gifter} = Gifter's Username\r\n{name} = Sub Username\r\n{tier} = Subscription tier (Prime, Tier 1, 2, 3)\r\n{months} = Number of months subscribed\r\n{isPlural} = Adds an 's' if months > 1",
     "group": "Twitch Subscribers"
   },
+  "TwitchGiftMassMessage": {
+    "type": "textbox",
+    "label": "Gift Multiple Subs Alert Message",
+    "value": "{gifter} has gifted {amount} subs to the channel: {recipients}.",
+    "tooltip": "The alert format when someone gifts more than 1 sub.\r\n{gifter} = Gifter's Username\r\n{amount} = Number of Subs\r\n{recipients} = A comma-delimited list of users that received the gifted subs",
+    "group": "Twitch Subscribers"
+  },
   "YoutubeOnFollow": {
     "type": "checkbox",
     "value": false,
