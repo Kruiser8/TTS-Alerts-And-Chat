@@ -16,6 +16,7 @@ import codecs
 import json
 from collections import OrderedDict
 import time
+import re
 import threading
 import clr
 clr.AddReference("IronPython.Modules.dll")
@@ -45,6 +46,9 @@ SettingsFile = os.path.join(os.path.dirname(__file__), "settings.json")
 
 # UI Config file location
 UIConfigFile = os.path.join(os.path.dirname(__file__), "UI_Config.json")
+
+# Banned words file
+BannedFile = os.path.join(os.path.dirname(__file__), "banned.txt")
 
 SubPlanMap = {
 	"Prime": "Prime",
@@ -133,6 +137,8 @@ class Settings(object):
 			self.YoutubeSuperchatMinimum = 5
 			self.YoutubeSuperchatDelay = 0
 			self.YoutubeSuperchatMessage = "{name} donated {amount}."
+			self.BannedAction = "Skip Messages with a Banned Word"
+			self.BannedReplacement = ""
 			self.SocketToken = None
 
 	def Reload(self, jsondata):
@@ -170,7 +176,6 @@ class UIConfig(object):
 #---------------------------------------
 # Event Receiver Functions
 #---------------------------------------
-
 def EventReceiverConnected(sender, args):
 	Parent.Log(ScriptName, "Connected")
 	return
@@ -188,14 +193,11 @@ def handleEvent(sender, args):
 	# Check if it contains data and for what streaming service it is
 	if evntdata and evntdata.For == "twitch_account":
 
-		# This is an Twitch follow event
 		if evntdata.Type == "follow" and ScriptSettings.TwitchOnFollow:
-			# Events can come in bulk so it is in a list, itterate over it.
 			for message in evntdata.Message:
 				ttsMessage = ScriptSettings.TwitchFollowMessage.format(name=message.Name)
 				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchFollowDelay)
 
-		# This is a Twitch cheer event
 		elif evntdata.Type == "bits" and ScriptSettings.TwitchOnCheer:
 			s = ''
 			for message in evntdata.Message:
@@ -224,7 +226,6 @@ def handleEvent(sender, args):
 					ttsMessage = ScriptSettings.TwitchRaidMessage.format(name=message.Name, amount=str(message.Raiders))
 					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchRaidDelay)
 
-		# This is a Twitch subscription event
 		elif evntdata.Type == "subscription" and ScriptSettings.TwitchOnSub:
 			s = ''
 			if len(evntData.Message) > 1 and evntData.Message[0].Gifter:
@@ -253,9 +254,7 @@ def handleEvent(sender, args):
 
 	elif evntdata and evntdata.For == "mixer_account":
 
-		# This is an Twitch follow event
 		if evntdata.Type == "follow" and ScriptSettings.MixerOnFollow:
-			# Events can come in bulk so it is in a list, itterate over it.
 			for message in evntdata.Message:
 				ttsMessage = ScriptSettings.MixerFollowMessage.format(name=message.Name)
 				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.MixerFollowDelay)
@@ -282,7 +281,6 @@ def handleEvent(sender, args):
 					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.MixerHostDelay)
 
 	elif evntdata and evntdata.For == "streamlabs":
-		# This is a streamlabs donation event
 		if evntdata.Type == "donation" and ScriptSettings.StreamlabsOnDonation:
 			for message in evntdata.Message:
 				if float(message.Amount) >= ScriptSettings.StreamlabsDonationMinimum:
@@ -290,10 +288,7 @@ def handleEvent(sender, args):
 					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.StreamlabsDonationDelay, ScriptSettings.StreamlabsIncludeDonationMessage, message.Message)
 
 	elif evntdata and evntdata.For == "youtube_account":
-
-		# This is an Twitch follow event
 		if evntdata.Type == "follow" and ScriptSettings.YoutubeOnFollow:
-			# Events can come in bulk so it is in a list, itterate over it.
 			for message in evntdata.Message:
 				ttsMessage = ScriptSettings.YoutubeFollowMessage.format(name=message.Name)
 				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.YoutubeFollowDelay)
@@ -333,8 +328,12 @@ def updateUIConfig():
 	UIConfigs.Save(UIConfigFile)
 
 def SendTTSMessage(voice, message):
+	if ScriptSettings.BannedAction == 'Skip Messages with a Banned Word':
+		if bool(reBanned.search(message)):
+			return
+	else:
+		message = reBanned.sub(ScriptSettings.BannedReplacement, message)
 	try:
-		Parent.Log(ScriptName, message)
 		voice.Speak(message)
 	except Exception as e:
 		Parent.SendStreamWhisper(Parent.GetChannelName(), 'TTS Failed, please see logs')
@@ -353,7 +352,6 @@ def SendTTSMessagesWithDelay(message, delay, includeExtra = False, extraMessage 
 # Chatbot Initialize Function
 #---------------------------------------
 def Init():
-
 	# Load settings from file and verify
 	global ScriptSettings
 	ScriptSettings = Settings(SettingsFile)
@@ -364,6 +362,20 @@ def Init():
 	spk.Volume = ScriptSettings.Volume
 
 	updateUIConfig()
+
+	banned = []
+	with open(BannedFile) as f:
+		banned = f.readlines()
+
+	banned = [x.strip() for x in banned]
+	banned = sorted(set(banned))
+
+	with open(BannedFile, 'w') as f:
+		for word in banned:
+			print >>f, word
+
+	global reBanned
+	reBanned = re.compile(r"({0})".format('|'.join(banned)))
 
 	if ScriptSettings.VoiceName != '':
 		spk.SelectVoice(ScriptSettings.VoiceName)
@@ -386,7 +398,6 @@ def Init():
 # Chatbot Save Settings Function
 #---------------------------------------
 def ReloadSettings(jsondata):
-
 	# Reload newly saved settings and verify
 	ScriptSettings.Reload(jsondata)
 
@@ -418,7 +429,6 @@ def Unload():
 # Chatbot Execute Function
 #---------------------------------------
 def Execute(data):
-
 	if data.IsChatMessage():
 		if ScriptSettings.TTSAllChat:
 			if not ScriptSettings.TTSAllChatExcludeCommands or data.Message[0] != '!':
@@ -517,6 +527,10 @@ def Parse(parseString, user, target, message):
 def OpenReadMe():
     """Open the README.txt in the scripts folder"""
     os.startfile(os.path.join(os.path.dirname(__file__), "README.txt"))
+
+def OpenBannedFile():
+	"""Open the banned.txt in the scripts folder"""
+	os.startfile(os.path.join(os.path.dirname(__file__), "banned.txt"))
 
 def OpenSocketToken():
     """Open Streamlabs API Settings"""

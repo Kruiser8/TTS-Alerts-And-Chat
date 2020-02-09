@@ -132,6 +132,6 @@ The format of the alert to be read by text-to-speech. There are a number of vari
 
 # Copyright
 
-This alert was made by **Kruiser8** (https://twitch.tv/kruiser8) and is licensed under the *Creative Commmons Attribution 4.0 International License (CC BY 4.0)*
+This script was made by **Kruiser8** (https://twitch.tv/kruiser8) and is licensed under the *Creative Commmons Attribution 4.0 International License (CC BY 4.0)*
 
 For License information, visit https://creativecommons.org/licenses/by/4.0/

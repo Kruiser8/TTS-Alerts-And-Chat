@@ -527,6 +527,32 @@
     "wsevent": "",
     "group": "Streamlabs Token"
   },
+  "BannedAction": {
+    "type": "dropdown",
+    "value": "Skip Messages with a Banned Word",
+    "items": [
+      "Skip Messages with a Banned Word",
+      "Replace Banned Words with the Replacement Below"
+    ],
+    "label": "Banned Words Setting",
+    "tooltip": "Customize how banned words are handled.",
+    "group": "Banned Words"
+  },
+  "BannedReplacement": {
+    "type": "textbox",
+    "label": "Banned Word Replacement",
+    "value": "",
+    "tooltip": "The text used to replace banned words.",
+    "group": "Banned Words"
+  },
+  "OpenBannedFile": {
+    "type": "button",
+    "label": "Open banned.txt",
+    "tooltip": "Opens the text file of banned words",
+    "function": "OpenBannedFile",
+    "wsevent": "",
+    "group": "Banned Words"
+  },
   "OpenGithubRepository": {
     "type": "button",
     "label": "GitHub Repository",
