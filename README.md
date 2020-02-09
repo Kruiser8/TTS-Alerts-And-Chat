@@ -123,6 +123,20 @@ The format of the alert to be read by text-to-speech. There are a number of vari
 - *{gifter}* is the gifter of a Twitch sub
 - *{recipients}* is the comma-delimited list of viewers that are gifted subs when more than 1 sub is gifted to the channel
 
+## Banned Words
+
+### Banned Words Setting
+Choose whether to skip messages with banned words or replace the words.
+
+### Match Whole Words Only
+Enable this to match words in the banned.txt file exactly. If disabled (unchecked), partial words will be matched. As an example, if **fu** is a banned word and the message contains **fudge**, the message will get blocked if this setting is unchecked. This helps avoid trolls that combine words together.
+
+### Banned Word Replacement
+This field is used to replace banned words when found in messages if *Replace Banned Words* was selected as the **Banned Words Setting**.
+
+### Open banned.txt
+Edit this file to control what words or phrases are banned from TTS. Each banned word or phrase should be on its own line. 
+
 ## Streamlabs Token
 
 ### Streamlabs Socket Token

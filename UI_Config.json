@@ -512,30 +512,22 @@
     "tooltip": "The alert format.\r\n{name} = Donator Username\r\n{amount} = Amount of money donated",
     "group": "Youtube Superchat"
   },
-  "SocketToken": {
-    "type": "textbox",
-    "label": "Streamlabs Socket Token",
-    "value": "",
-    "tooltip": "The Streamlabs Socket Token.\r\nThis can be found on the streamlabs website via the left-hand side menu -> API Settings -> API Tokens.",
-    "group": "Streamlabs Token"
-  },
-  "OpenSocketToken": {
-    "type": "button",
-    "label": "Open Streamlabs API Settings",
-    "tooltip": "Opens the API Settings for Streamlabs",
-    "function": "OpenSocketToken",
-    "wsevent": "",
-    "group": "Streamlabs Token"
-  },
   "BannedAction": {
     "type": "dropdown",
-    "value": "Skip Messages with a Banned Word",
+    "value": "Skip Messages with Banned Words",
     "items": [
-      "Skip Messages with a Banned Word",
-      "Replace Banned Words with the Replacement Below"
+      "Skip Messages with Banned Words",
+      "Replace Banned Words"
     ],
     "label": "Banned Words Setting",
     "tooltip": "Customize how banned words are handled.",
+    "group": "Banned Words"
+  },
+  "BannedMatchWholeWord": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Match Whole Words Only",
+    "tooltip": "Check this to only look for banned words rather than partial words.\r\nFor example, if 'fu' is a banned word and the message contains 'fudge'\r\n When Checked: The message is NOT flagged as containing a banned word\r\n When Not Checked: The message is flagged as containing a bad word",
     "group": "Banned Words"
   },
   "BannedReplacement": {
@@ -552,6 +544,21 @@
     "function": "OpenBannedFile",
     "wsevent": "",
     "group": "Banned Words"
+  },
+  "SocketToken": {
+    "type": "textbox",
+    "label": "Streamlabs Socket Token",
+    "value": "",
+    "tooltip": "The Streamlabs Socket Token.\r\nThis can be found on the streamlabs website via the left-hand side menu -> API Settings -> API Tokens.",
+    "group": "Streamlabs Token"
+  },
+  "OpenSocketToken": {
+    "type": "button",
+    "label": "Open Streamlabs API Settings",
+    "tooltip": "Opens the API Settings for Streamlabs",
+    "function": "OpenSocketToken",
+    "wsevent": "",
+    "group": "Streamlabs Token"
   },
   "OpenGithubRepository": {
     "type": "button",

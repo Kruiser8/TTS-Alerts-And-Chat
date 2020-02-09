@@ -137,7 +137,9 @@ class Settings(object):
 			self.YoutubeSuperchatMinimum = 5
 			self.YoutubeSuperchatDelay = 0
 			self.YoutubeSuperchatMessage = "{name} donated {amount}."
-			self.BannedAction = "Skip Messages with a Banned Word"
+			self.BannedAction = "Skip Messages with Banned Words"
+			self.BannedActionBoolean = True
+			self.BannedMatchWholeWord = True
 			self.BannedReplacement = ""
 			self.SocketToken = None
 
@@ -327,8 +329,22 @@ def updateUIConfig():
 
 	UIConfigs.Save(UIConfigFile)
 
+def updateBannedSettings():
+	global ScriptSettings, reBanned
+	ScriptSettings.BannedActionBoolean = bool(ScriptSettings.BannedAction == 'Skip Messages with Banned Words')
+
+	banned = []
+	with open(BannedFile) as f:
+		banned = f.readlines()
+	banned = [x.strip() for x in banned]
+
+	if ScriptSettings.BannedMatchWholeWord:
+		reBanned = re.compile(r"\b({0})\b".format('|'.join(banned)))
+	else:
+		reBanned = re.compile(r"({0})".format('|'.join(banned)))
+
 def SendTTSMessage(voice, message):
-	if ScriptSettings.BannedAction == 'Skip Messages with a Banned Word':
+	if ScriptSettings.BannedActionBoolean:
 		if bool(reBanned.search(message)):
 			return
 	else:
@@ -362,20 +378,7 @@ def Init():
 	spk.Volume = ScriptSettings.Volume
 
 	updateUIConfig()
-
-	banned = []
-	with open(BannedFile) as f:
-		banned = f.readlines()
-
-	banned = [x.strip() for x in banned]
-	banned = sorted(set(banned))
-
-	with open(BannedFile, 'w') as f:
-		for word in banned:
-			print >>f, word
-
-	global reBanned
-	reBanned = re.compile(r"({0})".format('|'.join(banned)))
+	updateBannedSettings()
 
 	if ScriptSettings.VoiceName != '':
 		spk.SelectVoice(ScriptSettings.VoiceName)
@@ -400,6 +403,8 @@ def Init():
 def ReloadSettings(jsondata):
 	# Reload newly saved settings and verify
 	ScriptSettings.Reload(jsondata)
+
+	updateBannedSettings()
 
 	if ScriptSettings.VoiceName != '':
 		global spk
