@@ -78,47 +78,79 @@
     "tooltip": "The message that the bot will read when the command is used. \r\n {user} = username\r\n {message} = the chat message",
     "group": "TTS Command"
   },
+  "TTSCommandUsage": {
+    "type": "dropdown",
+    "value": "Stream Chat",
+    "items": [
+      "Stream Chat",
+      "Stream Whisper",
+      "Stream Both",
+      "Discord Chat",
+      "Discord Whisper",
+      "Discord Both",
+      "Chat Both",
+      "Whisper Both",
+      "All"
+    ],
+    "label": "Usage",
+    "tooltip": "Usage setting for where the command can be used",
+    "group": "TTS Command Usage"
+  },
+  "TTSCommandUsageReply": {
+    "type": "checkbox",
+    "value": false,
+    "label": "Send Usage Reply",
+    "tooltip": "Enable to display a message when the command is used from an invalid usage.",
+    "group": "TTS Command Usage"
+  },
+  "TTSCommandUsageReplyMessage": {
+    "type": "textbox",
+    "value": "{user} you can only use this command from {usage}!",
+    "label": "Usage Reply Message",
+    "tooltip": "The message that the bot will send when the command is used from an invalid usage. \r\n {user} = username\r\n {usage} = usage of the command",
+    "group": "TTS Command Usage"
+  },
   "TTSUseCD": {
     "type": "checkbox",
     "value": false,
     "label": "Use Cooldown Message",
     "tooltip": "Enable to display a message when the TTS command is on cooldown.",
-    "group": "TTS Cooldown"
+    "group": "TTS Command Cooldown"
   },
   "TTSCasterCD": {
     "type": "checkbox",
     "value": true,
     "label": "Caster ignores cooldown",
     "tooltip": "Enable/Disable cooldown for caster",
-    "group": "TTS Cooldown"
+    "group": "TTS Command Cooldown"
   },
   "TTSCooldown": {
     "type": "numberbox",
     "label": "Cooldown (seconds)",
     "value": 0,
     "tooltip": "Cooldown in seconds.",
-    "group": "TTS Cooldown"
+    "group": "TTS Command Cooldown"
   },
   "TTSOnCooldown": {
     "type": "textbox",
     "value": "{user} the command is still on cooldown for {cooldown} seconds!",
     "label": "Cooldown Response",
     "tooltip": "The message that the bot will display when the command is on cooldown. \r\n {user} = username\r\n {cooldown} = time remaining",
-    "group": "TTS Cooldown"
+    "group": "TTS Command Cooldown"
   },
   "TTSUserCooldown": {
     "type": "numberbox",
     "label": "User Cooldown (seconds)",
     "value": 10,
     "tooltip": "User cooldown in seconds.",
-    "group": "TTS Cooldown"
+    "group": "TTS Command Cooldown"
   },
   "TTSOnUserCooldown": {
     "type": "textbox",
     "value": "{user} the command is still on user cooldown for {cooldown} seconds!",
     "label": "User Cooldown Response",
     "tooltip": "The message that the bot will display when the command is on user cooldown.\r\n {user} = username\r\n {cooldown} = time remaining",
-    "group": "TTS Cooldown"
+    "group": "TTS Command Cooldown"
   },
   "TTSAllChat": {
     "type": "checkbox",
@@ -140,6 +172,38 @@
     "label": "TTS Message Format",
     "tooltip": "The message that the bot will read for every chat message. \r\n {user} = username\r\n {message} = the chat message",
     "group": "TTS Chat Messages"
+  },
+  "TTSAllChatUsage": {
+    "type": "dropdown",
+    "value": "Stream Chat",
+    "items": [
+      "Stream Chat",
+      "Stream Whisper",
+      "Stream Both",
+      "Discord Chat",
+      "Discord Whisper",
+      "Discord Both",
+      "Chat Both",
+      "Whisper Both",
+      "All"
+    ],
+    "label": "Usage",
+    "tooltip": "Usage setting for where messages can trigger TTS",
+    "group": "TTS Chat Messages Usage"
+  },
+  "TTSAllChatUsageReply": {
+    "type": "checkbox",
+    "value": false,
+    "label": "Send Usage Reply",
+    "tooltip": "Enable to display a message when TTS is triggered from an invalid usage.",
+    "group": "TTS Chat Messages Usage"
+  },
+  "TTSAllChatUsageReplyMessage": {
+    "type": "textbox",
+    "value": "{user} you can only use this command from {usage}!",
+    "label": "Usage Reply Message",
+    "tooltip": "The message that the bot will send when the TTS is triggered from an invalid usage. \r\n {user} = username\r\n {usage} = usage of the command",
+    "group": "TTS Chat Messages Usage"
   },
   "MixerOnFollow": {
     "type": "checkbox",

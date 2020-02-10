@@ -75,6 +75,9 @@ class Settings(object):
 			self.TTSCommandPermissionInfo = ""
 			self.TTSCommandCost = 500
 			self.TTSCommandMessage = "{user} says, {message}"
+			self.TTSCommandUsage = "Stream Chat"
+			self.TTSCommandUsageReply = False
+			self.TTSCommandUsageReplyMessage = "{user} you can only use this command from {usage}!"
 			self.TTSUseCD = False
 			self.TTSCasterCD = True
 			self.TTSCooldown = 0
@@ -84,6 +87,9 @@ class Settings(object):
 			self.TTSAllChat = False
 			self.TTSAllChatExcludeCommands = True
 			self.TTSAllChatMessage = "{user} says, {message}"
+			self.TTSAllChatUsage = "Stream Chat"
+			self.TTSAllChatUsageReply = False
+			self.TTSAllChatUsageReplyMessage = "{user} you can only use this command from {usage}!"
 			self.MixerOnFollow = False
 			self.MixerFollowDelay = 0
 			self.MixerFollowMessage = "{name} has followed."
@@ -435,7 +441,7 @@ def Unload():
 #---------------------------------------
 def Execute(data):
 	if data.IsChatMessage():
-		if ScriptSettings.TTSAllChat:
+		if ScriptSettings.TTSAllChat and IsFromValidSource(data, ScriptSettings.TTSAllChatUsage, ScriptSettings.TTSAllChatUsageReply, ScriptSettings.TTSAllChatUsageReplyMessage):
 			if not ScriptSettings.TTSAllChatExcludeCommands or data.Message[0] != '!':
 				message = ScriptSettings.TTSAllChatMessage.format(user=data.UserName, message=data.Message)
 				messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message))
@@ -444,7 +450,7 @@ def Execute(data):
 		else:
 			command = data.GetParam(0)
 
-			if command == ScriptSettings.TTSCommand:
+			if command == ScriptSettings.TTSCommand and IsFromValidSource(data, ScriptSettings.TTSCommandUsage, ScriptSettings.TTSCommandUsageReply, ScriptSettings.TTSCommandUsageReplyMessage):
 				if HasPermission(data, ScriptSettings.TTSCommandPermission, ScriptSettings.TTSCommandPermissionInfo):
 					if not IsOnCooldown(data, ScriptSettings.TTSCommand, ScriptSettings.TTSCasterCD, ScriptSettings.TTSUseCD, ScriptSettings.TTSOnCooldown, ScriptSettings.TTSOnUserCooldown):
 						if HasCurrency(data, ScriptSettings.TTSCommandCost):
@@ -463,6 +469,49 @@ def Execute(data):
 #---------------------------------------
 # Chatbot Execute Helper Functions
 #---------------------------------------
+def SendResp(data, Message):
+	"""Sends message to Stream or discord chat depending on settings"""
+	if not data.IsFromDiscord() and not data.IsWhisper():
+		Parent.SendStreamMessage(Message)
+
+	if not data.IsFromDiscord() and data.IsWhisper():
+		Parent.SendStreamWhisper(data.User, Message)
+
+	if data.IsFromDiscord() and not data.IsWhisper():
+		Parent.SendDiscordMessage(Message)
+
+	if data.IsFromDiscord() and data.IsWhisper():
+		Parent.SendDiscordDM(data.User, Message)
+
+def IsFromValidSource(data, Usage, SendResponse, UsageResponse):
+	"""Return true or false depending on the message is sent from
+	a source that's in the usage setting or not"""
+	usedDiscord = data.IsFromDiscord()
+	usedWhisper = data.IsWhisper()
+	if not usedDiscord:
+		l = ["Stream Chat", "Chat Both", "All", "Stream Both"]
+		if not usedWhisper and (Usage in l):
+			return True
+
+		l = ["Stream Whisper", "Whisper Both", "All", "Stream Both"]
+		if usedWhisper and (Usage in l):
+			return True
+
+	if usedDiscord:
+		l = ["Discord Chat", "Chat Both", "All", "Discord Both"]
+		if not usedWhisper and (Usage in l):
+			return True
+
+		l = ["Discord Whisper", "Whisper Both", "All", "Discord Both"]
+		if usedWhisper and (Usage in l):
+			return True
+
+	if SendResponse:
+		message = UsageResponse.format(user=data.UserName, usage=Usage)
+		SendResp(data, message)
+
+	return False
+
 def HasPermission(data, permission, permissionInfo):
     """Returns true if user has permission and false if user doesn't"""
     if not Parent.HasPermission(data.User, permission, permissionInfo):
@@ -494,14 +543,14 @@ def IsOnCooldown(data, command, casterCD, useCD, cooldownMessage, userCooldownMe
 
                 #send cooldown message
                 message = cooldownMessage.format(user=data.UserName, cooldown=m_CooldownRemaining)
-                Parent.SendStreamMessage(message)
+                SendResp(data, message)
 
             else: #set cd remaining
                 m_CooldownRemaining = userCDD
 
                 #send usercooldown message
                 message = userCooldownMessage.format(user=data.UserName, cooldown=m_CooldownRemaining)
-                Parent.SendStreamMessage(message)
+                SendResp(data, message)
         return True
     return False
 

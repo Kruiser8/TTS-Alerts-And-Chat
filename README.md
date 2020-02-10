@@ -66,8 +66,23 @@ Customize the message read by the narrator. The following variables will get rep
 - *{user}* will be replaced with the viewer's username
 - *{message}* will be replaced with the chat message
 
-## TTS Cooldown
+## TTS Command Usage
+In this section, you can customize the usage for the TTS Command that uses text-to-speech.
+
+### Usage
+Determine how viewer's can use the TTS command. Options allow support for messages through discord and whispers.
+
+### Send Usage Reply
+Enable this to send a message to a viewer when they attempt to trigger the command from an invalid location. For example, this applies when the **Usage** is *Stream Chat* and a viewer attempts to trigger the command via Discord.
+
+### Usage Reply Message
+This is the message to send to a viewer who triggers the command from an invalid location.
+
+## TTS Command Cooldown
 In this section, you can customize a cooldown for the TTS Command that uses text-to-speech.
+
+### Use Cooldown Message
+Enable this to send a message when the command is on cooldown.
 
 ### Caster ignores cooldown
 Enables the Caster to ignore the cooldown.
@@ -102,6 +117,18 @@ Customize the message read by the narrator. The following variables will get rep
 - *{user}* will be replaced with the viewer's username
 - *{message}* will be replaced with the chat message
 
+## TTS Chat Messages Usage
+In this section, you can customize the usage for triggering text-to-speech via a message.
+
+### Usage
+Determine how viewer's can trigger text-to-speech. Options allow support for messages through discord and whispers.
+
+### Send Usage Reply
+Enable this to send a message to a viewer when they attempt to trigger the command from an invalid location. For example, this applies when the **Usage** is *Stream Chat* and a viewer attempts to trigger the command via Discord.
+
+### Usage Reply Message
+This is the message to send to a viewer who triggers the command from an invalid location.
+
 ## Alert Types
 There are alert types across Mixer, Streamlabs, Twitch, and Youtube that are customizable. To save space, below is a summary of setting types.
 
@@ -135,7 +162,7 @@ Enable this to match words in the banned.txt file exactly. If disabled (unchecke
 This field is used to replace banned words when found in messages if *Replace Banned Words* was selected as the **Banned Words Setting**.
 
 ### Open banned.txt
-Edit this file to control what words or phrases are banned from TTS. Each banned word or phrase should be on its own line. 
+Edit this file to control what words or phrases are banned from TTS. Each banned word or phrase should be on its own line.
 
 ## Streamlabs Token
 
