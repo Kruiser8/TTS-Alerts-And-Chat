@@ -1,8 +1,8 @@
 /*
- This overlay was made  by Kruiser8 (https://twitch.tv/kruiser8)
-      and is licensed under the Creative Commmons Attribution 4.0 International License (CC BY 4.0)
+This overlay was made  by Kruiser8 (https://twitch.tv/kruiser8)
+  and is licensed under the Creative Commmons Attribution 4.0 International License (CC BY 4.0)
 
-      For License information, visit https://creativecommons.org/licenses/by/4.0/
+For License information, visit https://creativecommons.org/licenses/by/4.0/
 */
 
 function animateIn(selector, animationIn) {
@@ -38,60 +38,60 @@ var animationQueue = async.queue(async function (data, callback) {
 }, 1);
 
 function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 // Do stuff if the document is fully loaded
 $(document).ready(function() {
-	// Show an error message if the API key file is not loaded
-	if (typeof API_Key === "undefined") {
-		$("body").html("No API Key found or load!<br>Right-click on the script in Streamlabs and select \"Insert API Key\"");
-		$("body").css({"font-size": "20px", "color": "#ff8080", "text-align": "center"});
-	}
-	// Connect to the Streamlabs Chatbot websocket
-	else {
-		connectWebsocket();
-	}
+  // Show an error message if the API key file is not loaded
+  if (typeof API_Key === "undefined") {
+    $("body").html("No API Key found or load!<br>Right-click on the script in Streamlabs and select \"Insert API Key\"");
+    $("body").css({"font-size": "20px", "color": "#ff8080", "text-align": "center"});
+  }
+  // Connect to the Streamlabs Chatbot websocket
+  else {
+    connectWebsocket();
+  }
 });
 
 // Function to connect and authenticate to the Streamlabs Chatbot webosocket
 // Automatically tries to reconnect after connection has been closed
 // Handles received registered websocket events from Streamlabs Chatbot
 function connectWebsocket() {
-	// Create the websocket connection
-	var socket = new WebSocket(API_Socket);
+  // Create the websocket connection
+  var socket = new WebSocket(API_Socket);
 
-	// WS OnOpen event : authenticate
-	socket.onopen = function() {
-		// Create authentication payload and request required events
-		var auth = {
-			author: "Kruiser8",
-			website: "http://www.twitch.tv/kruiser8",
-			api_key: API_Key,
-			events: [
-				"EVENT_TTS_AC_OVERLAY"
-			]
-		};
-		// Send authentication payload to Streamlabs Chatbot
-		socket.send(JSON.stringify(auth));
-	};
+  // WS OnOpen event : authenticate
+  socket.onopen = function() {
+    // Create authentication payload and request required events
+    var auth = {
+      author: "Kruiser8",
+      website: "http://www.twitch.tv/kruiser8",
+      api_key: API_Key,
+      events: [
+        "EVENT_TTS_AC_OVERLAY"
+      ]
+    };
+    // Send authentication payload to Streamlabs Chatbot
+    socket.send(JSON.stringify(auth));
+  };
 
-	// Ws OnClose : try reconnect
-	socket.onclose = function() {
-		socket = null;
-		setTimeout(connectWebsocket, 5000);
-	};
+  // Ws OnClose : try reconnect
+  socket.onclose = function() {
+    socket = null;
+    setTimeout(connectWebsocket, 5000);
+  };
 
-	// WS OnMessage event : handle events
-	socket.onmessage = function (message) {
-		// Parse message data to extract event name
-		var socketMessage = JSON.parse(message.data);
+  // WS OnMessage event : handle events
+  socket.onmessage = function (message) {
+    // Parse message data to extract event name
+    var socketMessage = JSON.parse(message.data);
     console.log(socketMessage);
 
-		// EVENT_TTS_AC_OVERLAY
-		if (socketMessage.event == "EVENT_TTS_AC_OVERLAY") {
-			var eventData = JSON.parse(socketMessage.data);
+    // EVENT_TTS_AC_OVERLAY
+    if (socketMessage.event == "EVENT_TTS_AC_OVERLAY") {
+      var eventData = JSON.parse(socketMessage.data);
       animationQueue.push(eventData);
-		}
-	};
+    }
+  };
 };
