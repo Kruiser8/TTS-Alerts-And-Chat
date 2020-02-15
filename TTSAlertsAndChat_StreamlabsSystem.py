@@ -3,6 +3,9 @@
 
 """ Text-To-Speech for Alerts and Chat Messages
 
+	1.1.0
+		Added $tts parameter, text-to-speech overlay, fixed twitch sub
+
 	1.0.0
 		Initial public release
 
@@ -32,7 +35,7 @@ ScriptName = "TTS Alerts and Chat"
 Website = "https://www.twitch.tv/kruiser8"
 Description = "Text-to-speech for streamlabs alerts and chat messages."
 Creator = "Kruiser8"
-Version = "1.0.0"
+Version = "1.1.0"
 
 #---------------------------------------
 # Script Variables
