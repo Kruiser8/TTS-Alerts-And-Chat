@@ -205,6 +205,165 @@
     "tooltip": "The message that the bot will send when the TTS is triggered from an invalid usage. \r\n {user} = username\r\n {usage} = usage of the command",
     "group": "TTS Chat Messages Usage"
   },
+  "TTSOverlayExcludeAlerts": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Exclude Alerts from Overlay",
+    "tooltip": "Enable to not display alert text-to-speech on the overlay.",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayTime": {
+    "type": "numberbox",
+    "label": "Seconds to Display",
+    "value": 8,
+    "tooltip": "The number of seconds to display the message",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayFontColor": {
+    "type": "colorpicker",
+    "label": "Font Color",
+    "value": "rgba(255,255,255,1.0)",
+    "tooltip": "",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayFontSize": {
+    "type": "numberbox",
+    "label": "Font Size",
+    "value": 32,
+    "tooltip": "The size of the font in the overlay.",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayFont": {
+    "type": "textbox",
+    "value": "",
+    "label": "Font Family",
+    "tooltip": "The font family for the text. The font has to be available on your system.",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayUseBackground": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Use Background Color",
+    "tooltip": "Enable to use the below background color on the overlay.",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayBackgroundColor": {
+    "type": "colorpicker",
+    "label": "Background Color",
+    "value": "rgba(0,0,0,1.0)",
+    "tooltip": "",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayUseBorder": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Use Border Color",
+    "tooltip": "Enable to use the below border color on the overlay.",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayBorderColor": {
+    "type": "colorpicker",
+    "label": "Border Color",
+    "value": "rgba(255,255,255,1.0)",
+    "tooltip": "",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayAnimateIn": {
+    "type": "dropdown",
+    "value": "fadeIn",
+    "items": [
+      "bounceIn",
+      "bounceInDown",
+      "bounceInLeft",
+      "bounceInRight",
+      "bounceInUp",
+      "fadeIn",
+      "fadeInDown",
+      "fadeInDownBig",
+      "fadeInLeft",
+      "fadeInLeftBig",
+      "fadeInRight",
+      "fadeInRightBig",
+      "fadeInUp",
+      "fadeInUpBig",
+      "flipInX",
+      "flipInY",
+      "lightSpeedIn",
+      "rotateIn",
+      "rotateInDownLeft",
+      "rotateInDownRight",
+      "rotateInUpLeft",
+      "rotateInUpRight",
+      "slideInUp",
+      "slideInDown",
+      "slideInLeft",
+      "slideInRight",
+      "zoomIn",
+      "zoomInDown",
+      "zoomInLeft",
+      "zoomInRight",
+      "zoomInUp"
+    ],
+    "label": "Animate In",
+    "tooltip": "Select the animation to apply when the text appears",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayAnimateOut": {
+    "type": "dropdown",
+    "value": "fadeOut",
+    "items": [
+      "bounceOut",
+      "bounceOutDown",
+      "bounceOutLeft",
+      "bounceOutRight",
+      "bounceOutUp",
+      "fadeOut",
+      "fadeOutDown",
+      "fadeOutDownBig",
+      "fadeOutLeft",
+      "fadeOutLeftBig",
+      "fadeOutRight",
+      "fadeOutRightBig",
+      "fadeOutUp",
+      "fadeOutUpBig",
+      "flipOutX",
+      "flipOutY",
+      "lightSpeedOut",
+      "rotateOut",
+      "rotateOutDownLeft",
+      "rotateOutDownRight",
+      "rotateOutUpLeft",
+      "rotateOutUpRight",
+      "slideOutUp",
+      "slideOutDown",
+      "slideOutLeft",
+      "slideOutRight",
+      "zoomOut",
+      "zoomOutDown",
+      "zoomOutLeft",
+      "zoomOutRight",
+      "zoomOutUp"
+    ],
+    "label": "Animate Out",
+    "tooltip": "Select the animation to apply when the text disappears",
+    "group": "TTS Overlay"
+  },
+  "OpenAnimateDemo": {
+    "type": "button",
+    "label": "Open Animation Demo",
+    "tooltip": "Opens the demo website for the animations",
+    "function": "OpenAnimateDemo",
+    "wsevent": "",
+    "group": "TTS Overlay"
+  },
+  "OpenOverlayFolder": {
+    "type": "button",
+    "label": "Open Overlay Folder",
+    "tooltip": "Opens the overlay folder for this script",
+    "function": "OpenOverlayFolder",
+    "wsevent": "",
+    "group": "TTS Overlay"
+  },
   "MixerOnFollow": {
     "type": "checkbox",
     "value": false,

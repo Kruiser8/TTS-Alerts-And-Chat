@@ -15,6 +15,9 @@ Thanks to [Ocgineer](https://github.com/ocgineer) for his [Streamlabs Event Rece
 For chatbot script installation help, please view this guide:
 https://github.com/StreamlabsSupport/Streamlabs-Chatbot/wiki/Prepare-&-Import-Scripts
 
+For setting up the text-to-speech overlay:
+https://github.com/StreamlabsSupport/Streamlabs-Chatbot/wiki/Script-overlays
+
 # Usage
 
 Before the alert text-to-speech will work, you'll need to add a Streamlabs Socket API token.
@@ -128,6 +131,24 @@ Enable this to send a message to a viewer when they attempt to trigger the comma
 
 ### Usage Reply Message
 This is the message to send to a viewer who triggers the command from an invalid location.
+
+## TTS Overlay
+Text-to-speech messages can be displayed on a customizable overlay.
+
+### Exclude Alerts from Overlay
+Enable this to not display alert text-to-speech messages on the overlay.
+
+### Font Color, Font Size, Font Family
+Customize how the font looks on the overlay. Font family must be an available font on your computer.
+
+### Background Color
+Set the background color of the overlay.
+
+### Border Color
+Set the border color of the overlay.
+
+### Animate In/Out
+Choose which animate.css animations to use when displaying the overlay.
 
 ## Alert Types
 There are alert types across Mixer, Streamlabs, Twitch, and Youtube that are customizable. To save space, below is a summary of setting types.

@@ -50,6 +50,9 @@ UIConfigFile = os.path.join(os.path.dirname(__file__), "UI_Config.json")
 # Banned words file
 BannedFile = os.path.join(os.path.dirname(__file__), "banned.txt")
 
+# TTS Parser
+RegTTS = re.compile(r"\$tts\((?P<message>.*?)\)")
+
 SubPlanMap = {
 	"Prime": "Prime",
 	"1000": "Tier 1",
@@ -90,6 +93,17 @@ class Settings(object):
 			self.TTSAllChatUsage = "Stream Chat"
 			self.TTSAllChatUsageReply = False
 			self.TTSAllChatUsageReplyMessage = "{user} you can only use this command from {usage}!"
+			self.TTSOverlayExcludeAlerts = True
+			self.TTSOverlayTime = 8
+			self.TTSOverlayFontColor = "rgba(255,255,255,1.0)"
+			self.TTSOverlayFontSize = 32
+			self.TTSOverlayFont = ""
+			self.TTSOverlayUseBackground = True
+			self.TTSOverlayBackgroundColor = "rgba(0,0,0,1.0)"
+			self.TTSOverlayUseBorder = True
+			self.TTSOverlayBorderColor = "rgba(255,255,255,1.0)"
+			self.TTSOverlayAnimateIn = 'fadeIn'
+			self.TTSOverlayAnimateOut = 'fadeOut'
 			self.MixerOnFollow = False
 			self.MixerFollowDelay = 0
 			self.MixerFollowMessage = "{name} has followed."
@@ -235,30 +249,35 @@ def handleEvent(sender, args):
 					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchRaidDelay)
 
 		elif evntdata.Type == "subscription" and ScriptSettings.TwitchOnSub:
-			s = ''
-			if len(evntData.Message) > 1 and evntData.Message[0].Gifter:
-				names = []
-				for message in evntdata.Message:
-					names.append(message.Name)
-				giftees = ', '.join(names)
-				ttsMessage = ScriptSettings.TwitchGiftMassMessage.format(recipients=giftees, gifter=message.Gifter, amount=len(names))
-			else:
-				for message in evntdata.Message:
-					tier = SubPlanMap[str(message.SubPlan)]
-					ttsMessage = ''
-					if message.Gifter:
-						if message.Months > 1:
-							s = 's'
+			try:
+				s = ''
+				if len(evntdata.Message) > 1 and evntdata.Message[0].Gifter:
+					names = []
+					for message in evntdata.Message:
+						names.append(message.Name)
+					giftees = ', '.join(names)
+					ttsMessage = ScriptSettings.TwitchGiftMassMessage.format(recipients=giftees, gifter=message.Gifter, amount=len(names))
+				else:
+					for message in evntdata.Message:
+						tier = SubPlanMap[str(message.SubPlan)]
+						ttsMessage = ''
+						if message.Gifter:
+							if message.Months > 1:
+								s = 's'
+							else:
+								s = ''
+							ttsMessage = ScriptSettings.TwitchGiftMessage.format(name=message.Name, gifter=message.Gifter, tier=tier, months=message.Months, isPlural=s)
 						else:
-							s = ''
-						ttsMessage = ScriptSettings.TwitchGiftMessage.format(name=message.Name, gifter=message.Gifter, tier=tier, months=message.Months, isPlural=s)
-					else:
-						if message.Months == 1:
-							ttsMessage = ScriptSettings.TwitchSubMessage.format(name=message.Name, tier=tier, months=message.Months)
-						else:
-							ttsMessage = ScriptSettings.TwitchResubMessage.format(name=message.Name, tier=tier, months=message.Months)
+							if message.Months == 1:
+								ttsMessage = ScriptSettings.TwitchSubMessage.format(name=message.Name, tier=tier, months=message.Months)
+							else:
+								ttsMessage = ScriptSettings.TwitchResubMessage.format(name=message.Name, tier=tier, months=message.Months)
 
 				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchSubDelay, ScriptSettings.TwitchIncludeSubMessage, message.Message)
+
+			except Exception as e:
+				Parent.SendStreamWhisper(Parent.GetChannelName(), 'TTS Failed, please see logs')
+				Parent.Log(ScriptName, str(e.args))
 
 	elif evntdata and evntdata.For == "mixer_account":
 
@@ -349,13 +368,32 @@ def updateBannedSettings():
 	else:
 		reBanned = re.compile(r"({0})".format('|'.join(banned)))
 
-def SendTTSMessage(voice, message):
+def SendOverlayUpdate(message):
+	""" Send updated information to the overlay. """
+	payload = {
+		'message': message,
+		'time': ScriptSettings.TTSOverlayTime,
+		'fontColor': ScriptSettings.TTSOverlayFontColor,
+		'fontSize': ScriptSettings.TTSOverlayFontSize,
+		'font': ScriptSettings.TTSOverlayFont,
+		'useBackground': ScriptSettings.TTSOverlayUseBackground,
+		'background': ScriptSettings.TTSOverlayBackgroundColor,
+		'useBorder': ScriptSettings.TTSOverlayUseBorder,
+		'border': ScriptSettings.TTSOverlayBorderColor,
+		'animateIn': ScriptSettings.TTSOverlayAnimateIn,
+		'animateOut': ScriptSettings.TTSOverlayAnimateOut,
+	}
+	Parent.BroadcastWsEvent("EVENT_TTS_AC_OVERLAY", json.dumps(payload))
+
+def SendTTSMessage(voice, message, isAlert):
 	if ScriptSettings.BannedActionBoolean:
 		if bool(reBanned.search(message)):
 			return
 	else:
 		message = reBanned.sub(ScriptSettings.BannedReplacement, message)
 	try:
+		if not isAlert or (isAlert and not ScriptSettings.TTSOverlayExcludeAlerts):
+			SendOverlayUpdate(message)
 		voice.Speak(message)
 	except Exception as e:
 		Parent.SendStreamWhisper(Parent.GetChannelName(), 'TTS Failed, please see logs')
@@ -366,9 +404,9 @@ def SendTTSMessagesWithDelay(message, delay, includeExtra = False, extraMessage 
 		time.sleep(delay)
 
 	global spk
-	SendTTSMessage(spk, message)
+	SendTTSMessage(spk, message, True)
 	if includeExtra:
-		SendTTSMessage(spk, extraMessage)
+		SendTTSMessage(spk, extraMessage, True)
 
 #---------------------------------------
 # Chatbot Initialize Function
@@ -444,7 +482,7 @@ def Execute(data):
 		if ScriptSettings.TTSAllChat and IsFromValidSource(data, ScriptSettings.TTSAllChatUsage, ScriptSettings.TTSAllChatUsageReply, ScriptSettings.TTSAllChatUsageReplyMessage):
 			if not ScriptSettings.TTSAllChatExcludeCommands or data.Message[0] != '!':
 				message = ScriptSettings.TTSAllChatMessage.format(user=data.UserName, message=data.Message)
-				messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message))
+				messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message, False))
 				messageThread.daemon = True
 				messageThread.start()
 		else:
@@ -456,7 +494,7 @@ def Execute(data):
 						if HasCurrency(data, ScriptSettings.TTSCommandCost):
 							commandOffset = len(ScriptSettings.TTSCommand) + 1
 							message = ScriptSettings.TTSCommandMessage.format(user=data.UserName, message=data.Message[commandOffset:])
-							messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message))
+							messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message, False))
 							messageThread.daemon = True
 							messageThread.start()
 
@@ -571,6 +609,15 @@ def Tick():
 # Chatbot Parameter Parser
 #---------------------------------------
 def Parse(parseString, user, target, message):
+	result = RegTTS.search(parseString)
+	if result:
+		paramMessage = result.group(0)
+		ttsMessage = result.group("message")
+		parseString = parseString.replace(paramMessage, "")
+
+		messageThread = threading.Thread(target=SendTTSMessage, args=(spk, ttsMessage, False))
+		messageThread.daemon = True
+		messageThread.start()
 
 	# Return unaltered parseString
 	return parseString
@@ -578,6 +625,10 @@ def Parse(parseString, user, target, message):
 #---------------------------------------
 # Chatbot Button Function
 #---------------------------------------
+def OpenOverlayFolder():
+	"""Open the overlay folder in the scripts folder"""
+	os.startfile(os.path.join(os.path.dirname(__file__), "overlay"))
+
 def OpenReadMe():
     """Open the README.txt in the scripts folder"""
     os.startfile(os.path.join(os.path.dirname(__file__), "README.txt"))
@@ -585,6 +636,10 @@ def OpenReadMe():
 def OpenBannedFile():
 	"""Open the banned.txt in the scripts folder"""
 	os.startfile(os.path.join(os.path.dirname(__file__), "banned.txt"))
+
+def OpenAnimateDemo():
+	"""Open Animation Demo Website"""
+	OpenLink("https://daneden.github.io/animate.css/")
 
 def OpenSocketToken():
     """Open Streamlabs API Settings"""
