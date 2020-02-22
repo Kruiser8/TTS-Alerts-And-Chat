@@ -3,6 +3,9 @@
 
 """ Text-To-Speech for Alerts and Chat Messages
 
+	1.1.1
+		Control overlay position/message, ban users, and set a character limit
+
 	1.1.0
 		Added $tts parameter, text-to-speech overlay, fixed twitch sub
 
@@ -35,7 +38,7 @@ ScriptName = "TTS Alerts and Chat"
 Website = "https://www.twitch.tv/kruiser8"
 Description = "Text-to-speech for streamlabs alerts and chat messages."
 Creator = "Kruiser8"
-Version = "1.1.0"
+Version = "1.1.1"
 
 #---------------------------------------
 # Script Variables
@@ -50,8 +53,11 @@ SettingsFile = os.path.join(os.path.dirname(__file__), "settings.json")
 # UI Config file location
 UIConfigFile = os.path.join(os.path.dirname(__file__), "UI_Config.json")
 
-# Banned words file
-BannedFile = os.path.join(os.path.dirname(__file__), "banned.txt")
+# Banned user file
+BannedUserFile = os.path.join(os.path.dirname(__file__), "users.txt")
+
+# Banned word file
+BannedWordFile = os.path.join(os.path.dirname(__file__), "banned.txt")
 
 # TTS Parser
 RegTTS = re.compile(r"\$tts\((?P<message>.*?)\)")
@@ -76,6 +82,8 @@ class Settings(object):
 			self.VoiceName = ""
 			self.Volume = 80
 			self.Rate = 0
+			self.MaxCharacters = 0
+			self.MaxCharacterMessage = "{user}, your message was too long for text-to-speech."
 			self.TTSCommand = "!tts"
 			self.TTSCommandPermission = "Caster"
 			self.TTSCommandPermissionInfo = ""
@@ -97,14 +105,21 @@ class Settings(object):
 			self.TTSAllChatUsageReply = False
 			self.TTSAllChatUsageReplyMessage = "{user} you can only use this command from {usage}!"
 			self.TTSOverlayExcludeAlerts = True
+			self.TTSOverlayMessage = "{user} says, {message}"
 			self.TTSOverlayTime = 8
 			self.TTSOverlayFontColor = "rgba(255,255,255,1.0)"
+			self.TTSOverlayUseFontOutline = False
+			self.TTSOverlayFontOutline = "rgba(0,0,0,0)"
+			self.TTSOverlayUseFontShadow = True
+			self.TTSOverlayFontShadow = "rgba(0,0,0,1.0)"
 			self.TTSOverlayFontSize = 32
 			self.TTSOverlayFont = ""
 			self.TTSOverlayUseBackground = True
 			self.TTSOverlayBackgroundColor = "rgba(0,0,0,1.0)"
 			self.TTSOverlayUseBorder = True
 			self.TTSOverlayBorderColor = "rgba(255,255,255,1.0)"
+			self.TTSOverlayHorizontalAlign = "center"
+			self.TTSOverlayVerticalAlign = "center"
 			self.TTSOverlayAnimateIn = 'fadeIn'
 			self.TTSOverlayAnimateOut = 'fadeOut'
 			self.MixerOnFollow = False
@@ -160,6 +175,12 @@ class Settings(object):
 			self.YoutubeSuperchatMinimum = 5
 			self.YoutubeSuperchatDelay = 0
 			self.YoutubeSuperchatMessage = "{name} donated {amount}."
+			self.BanUserCommand = "!banuser"
+			self.BanUserCommandPermission = "Caster"
+			self.BanUserCommandPermissionInfo = ""
+			self.BanWordCommand = "!banword"
+			self.BanWordCommandPermission = "Caster"
+			self.BanWordCommandPermissionInfo = ""
 			self.BannedAction = "Skip Messages with Banned Words"
 			self.BannedActionBoolean = True
 			self.BannedMatchWholeWord = True
@@ -232,7 +253,7 @@ def handleEvent(sender, args):
 					else:
 						s = ''
 					ttsMessage = ScriptSettings.TwitchCheerMessage.format(name=message.Name, amount=message.Amount, isPlural=s)
-					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchCheerDelay, ScriptSettings.TwitchIncludeCheerMessage, message.Message)
+					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchCheerDelay, ScriptSettings.TwitchIncludeCheerMessage, message.Message, message.Name)
 
 		elif evntdata.Type == "host" and ScriptSettings.TwitchOnHost:
 			s = ''
@@ -276,7 +297,7 @@ def handleEvent(sender, args):
 							else:
 								ttsMessage = ScriptSettings.TwitchResubMessage.format(name=message.Name, tier=tier, months=message.Months)
 
-				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchSubDelay, ScriptSettings.TwitchIncludeSubMessage, message.Message)
+				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchSubDelay, ScriptSettings.TwitchIncludeSubMessage, message.Message, message.Name)
 
 			except Exception as e:
 				Parent.SendStreamWhisper(Parent.GetChannelName(), 'TTS Failed, please see logs')
@@ -297,7 +318,7 @@ def handleEvent(sender, args):
 				else:
 					ttsMessage = ScriptSettings.MixerResubMessage.format(name=message.Name, tier=tier, months=message.Months)
 
-				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.MixerSubDelay, ScriptSettings.MixerIncludeSubMessage, message.Message)
+				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.MixerSubDelay, ScriptSettings.MixerIncludeSubMessage, message.Message, message.Name)
 
 		elif evntdata.Type == "host" and ScriptSettings.MixerOnHost:
 			s = ''
@@ -315,7 +336,7 @@ def handleEvent(sender, args):
 			for message in evntdata.Message:
 				if float(message.Amount) >= ScriptSettings.StreamlabsDonationMinimum:
 					ttsMessage = ScriptSettings.StreamlabsDonationMessage.format(name=message.Name, amount=str(message.FormattedAmount))
-					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.StreamlabsDonationDelay, ScriptSettings.StreamlabsIncludeDonationMessage, message.Message)
+					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.StreamlabsDonationDelay, ScriptSettings.StreamlabsIncludeDonationMessage, message.Message, message.Name)
 
 	elif evntdata and evntdata.For == "youtube_account":
 		if evntdata.Type == "follow" and ScriptSettings.YoutubeOnFollow:
@@ -337,7 +358,7 @@ def handleEvent(sender, args):
 			for message in evntdata.Message:
 				if float(message.Amount) >= ScriptSettings.YoutubeSuperchatMinimum:
 					ttsMessage = ScriptSettings.YoutubeSuperchatMessage.format(name=message.Name, amount=str(message.FormattedAmount))
-					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.YoutubeSuperchatDelay, ScriptSettings.YoutubeIncludeSuperchatMessage, message.Message)
+					SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.YoutubeSuperchatDelay, ScriptSettings.YoutubeIncludeSuperchatMessage, message.Message, message.Name)
 
 #---------------------------------------
 # Script Functions
@@ -358,18 +379,13 @@ def updateUIConfig():
 	UIConfigs.Save(UIConfigFile)
 
 def updateBannedSettings():
-	global ScriptSettings, reBanned
+	global ScriptSettings, reBanned, bannedWords, bannedUsers
 	ScriptSettings.BannedActionBoolean = bool(ScriptSettings.BannedAction == 'Skip Messages with Banned Words')
 
-	banned = []
-	with open(BannedFile) as f:
-		banned = f.readlines()
-	banned = [x.strip() for x in banned]
-
 	if ScriptSettings.BannedMatchWholeWord:
-		reBanned = re.compile(r"\b({0})\b".format('|'.join(banned)))
+		reBanned = re.compile(r"\b({0})\b".format('|'.join(bannedWords)), re.IGNORECASE)
 	else:
-		reBanned = re.compile(r"({0})".format('|'.join(banned)))
+		reBanned = re.compile(r"({0})".format('|'.join(bannedWords)), re.IGNORECASE)
 
 def SendOverlayUpdate(message):
 	""" Send updated information to the overlay. """
@@ -377,39 +393,69 @@ def SendOverlayUpdate(message):
 		'message': message,
 		'time': ScriptSettings.TTSOverlayTime,
 		'fontColor': ScriptSettings.TTSOverlayFontColor,
+		'useOutline': ScriptSettings.TTSOverlayUseFontOutline,
+		'fontOutline': ScriptSettings.TTSOverlayFontOutline,
+		'useShadow': ScriptSettings.TTSOverlayUseFontShadow,
+		'fontShadow': ScriptSettings.TTSOverlayFontShadow,
 		'fontSize': ScriptSettings.TTSOverlayFontSize,
 		'font': ScriptSettings.TTSOverlayFont,
 		'useBackground': ScriptSettings.TTSOverlayUseBackground,
 		'background': ScriptSettings.TTSOverlayBackgroundColor,
 		'useBorder': ScriptSettings.TTSOverlayUseBorder,
 		'border': ScriptSettings.TTSOverlayBorderColor,
+		'horizontalAlign': ScriptSettings.TTSOverlayHorizontalAlign,
+		'verticalAlign': ScriptSettings.TTSOverlayVerticalAlign,
 		'animateIn': ScriptSettings.TTSOverlayAnimateIn,
 		'animateOut': ScriptSettings.TTSOverlayAnimateOut,
 	}
 	Parent.BroadcastWsEvent("EVENT_TTS_AC_OVERLAY", json.dumps(payload))
 
-def SendTTSMessage(voice, message, isAlert):
+def SendTTSMessage(voice, message, isAlert, user = '', text = '', displayName = ''):
+	if user and user in bannedUsers:
+		return
+
+	if user and not text:
+		text = message
+
+	if not isAlert and user and ScriptSettings.MaxCharacters != 0 and len(message) > ScriptSettings.MaxCharacters:
+		Parent.SendStreamMessage(ScriptSettings.MaxCharacterMessage.format(user=displayName))
+		return
+
 	if ScriptSettings.BannedActionBoolean:
 		if bool(reBanned.search(message)):
 			return
 	else:
 		message = reBanned.sub(ScriptSettings.BannedReplacement, message)
 	try:
-		if not isAlert or (isAlert and not ScriptSettings.TTSOverlayExcludeAlerts):
+		if (isAlert and not ScriptSettings.TTSOverlayExcludeAlerts) or (not isAlert and not user):
 			SendOverlayUpdate(message)
+		elif not isAlert:
+			SendOverlayUpdate(ScriptSettings.TTSOverlayMessage.format(user=displayName, message=text))
+
 		voice.Speak(message)
 	except Exception as e:
 		Parent.SendStreamWhisper(Parent.GetChannelName(), 'TTS Failed, please see logs')
 		Parent.Log(ScriptName, str(e.args))
 
-def SendTTSMessagesWithDelay(message, delay, includeExtra = False, extraMessage = ''):
+def SendTTSMessagesWithDelay(message, delay, includeExtra = False, extraMessage = '', user = ''):
 	if delay > 0:
 		time.sleep(delay)
 
 	global spk
 	SendTTSMessage(spk, message, True)
 	if includeExtra:
-		SendTTSMessage(spk, extraMessage, True)
+		SendTTSMessage(spk, extraMessage, False, user)
+
+def readFileArray(fileToRead):
+	lines = []
+	with open(fileToRead) as f:
+		lines = f.readlines()
+	lines = [x.strip() for x in lines]
+	return lines
+
+def writeArrayToFile(arrayToWrite, fileToWrite):
+	with open(fileToWrite, 'w') as f:
+		f.write('\n'.join(arrayToWrite))
 
 #---------------------------------------
 # Chatbot Initialize Function
@@ -425,6 +471,10 @@ def Init():
 	spk.Volume = ScriptSettings.Volume
 
 	updateUIConfig()
+
+	global bannedWords, bannedUsers
+	bannedUsers = readFileArray(BannedUserFile)
+	bannedWords = readFileArray(BannedWordFile)
 	updateBannedSettings()
 
 	if ScriptSettings.VoiceName != '':
@@ -476,33 +526,86 @@ def Unload():
 	global EventReceiver
 	if EventReceiver.IsConnected:
 		EventReceiver.Disconnect()
+	EventReceiver = None
+
+#---------------------------
+#   [Optional] ScriptToggled (Notifies you when a user disables your script or enables it)
+#---------------------------
+def ScriptToggled(state):
+	global EventReceiver
+	if not state and EventReceiver.IsConnected:
+		EventReceiver.Disconnect()
+	elif state and not EventReceiver.IsConnected and ScriptSettings.SocketToken:
+		EventReceiver.Connect(ScriptSettings.SocketToken)
+
+	return
 
 #---------------------------------------
 # Chatbot Execute Function
 #---------------------------------------
 def Execute(data):
 	if data.IsChatMessage():
+		command = data.GetParam(0)
+
+		if command == ScriptSettings.TTSCommand and IsFromValidSource(data, ScriptSettings.TTSCommandUsage, ScriptSettings.TTSCommandUsageReply, ScriptSettings.TTSCommandUsageReplyMessage):
+			if HasPermission(data, ScriptSettings.TTSCommandPermission, ScriptSettings.TTSCommandPermissionInfo):
+				if not IsOnCooldown(data, ScriptSettings.TTSCommand, ScriptSettings.TTSCasterCD, ScriptSettings.TTSUseCD, ScriptSettings.TTSOnCooldown, ScriptSettings.TTSOnUserCooldown):
+					if HasCurrency(data, ScriptSettings.TTSCommandCost):
+						commandOffset = len(ScriptSettings.TTSCommand) + 1
+						text = data.Message[commandOffset:]
+						message = ScriptSettings.TTSCommandMessage.format(user=data.UserName, message=text)
+						messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message, False, data.UserName.lower(), text, data.UserName))
+						messageThread.daemon = True
+						messageThread.start()
+
+						Parent.AddUserCooldown(ScriptName, ScriptSettings.TTSCommand, data.User, ScriptSettings.TTSUserCooldown)
+    					Parent.AddCooldown(ScriptName, ScriptSettings.TTSCommand, ScriptSettings.TTSCooldown)
+
+		elif command == ScriptSettings.BanWordCommand and HasPermission(data, ScriptSettings.BanWordCommandPermission, ScriptSettings.BanWordCommandPermissionInfo) and data.GetParamCount() > 1:
+			message = data.GetParam(1)
+			i = 2
+			while i < data.GetParamCount():
+				message = message + ' ' + data.GetParam(i)
+				i = i + 1
+
+			if message:
+				global bannedWords
+				isPhrase = (' ' in message)
+				if message in bannedWords:
+					bannedWords.remove(message)
+					if isPhrase:
+						Parent.SendStreamMessage('Removed the phrase from the list of banned words.')
+					else:
+						Parent.SendStreamMessage('Removed the word from the list of banned words.')
+				else:
+					bannedWords.append(message)
+					if isPhrase:
+						Parent.SendStreamMessage('Added the phrase to the list of banned words.')
+					else:
+						Parent.SendStreamMessage('Added the word from the list of banned words.')
+				writeArrayToFile(bannedWords, BannedWordFile)
+				updateBannedSettings()
+
+
+		elif command == ScriptSettings.BanUserCommand and HasPermission(data, ScriptSettings.BanUserCommandPermission, ScriptSettings.BanUserCommandPermissionInfo) and data.GetParamCount() > 1:
+			user = data.GetParam(1).lower()
+
+			if user:
+				global bannedUsers
+				if user in bannedUsers:
+					bannedUsers.remove(user)
+					Parent.SendStreamMessage('Removed the user.')
+				else:
+					bannedUsers.append(user)
+					Parent.SendStreamMessage('Added the user.')
+				writeArrayToFile(bannedUsers, BannedUserFile)
+
 		if ScriptSettings.TTSAllChat and IsFromValidSource(data, ScriptSettings.TTSAllChatUsage, ScriptSettings.TTSAllChatUsageReply, ScriptSettings.TTSAllChatUsageReplyMessage):
-			if not ScriptSettings.TTSAllChatExcludeCommands or data.Message[0] != '!':
+			if not ScriptSettings.TTSAllChatExcludeCommands or command[0] != '!':
 				message = ScriptSettings.TTSAllChatMessage.format(user=data.UserName, message=data.Message)
-				messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message, False))
+				messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message, False, data.UserName.lower(), data.Message, data.UserName))
 				messageThread.daemon = True
 				messageThread.start()
-		else:
-			command = data.GetParam(0)
-
-			if command == ScriptSettings.TTSCommand and IsFromValidSource(data, ScriptSettings.TTSCommandUsage, ScriptSettings.TTSCommandUsageReply, ScriptSettings.TTSCommandUsageReplyMessage):
-				if HasPermission(data, ScriptSettings.TTSCommandPermission, ScriptSettings.TTSCommandPermissionInfo):
-					if not IsOnCooldown(data, ScriptSettings.TTSCommand, ScriptSettings.TTSCasterCD, ScriptSettings.TTSUseCD, ScriptSettings.TTSOnCooldown, ScriptSettings.TTSOnUserCooldown):
-						if HasCurrency(data, ScriptSettings.TTSCommandCost):
-							commandOffset = len(ScriptSettings.TTSCommand) + 1
-							message = ScriptSettings.TTSCommandMessage.format(user=data.UserName, message=data.Message[commandOffset:])
-							messageThread = threading.Thread(target=SendTTSMessage, args=(spk, message, False))
-							messageThread.daemon = True
-							messageThread.start()
-
-							Parent.AddUserCooldown(ScriptName, ScriptSettings.TTSCommand, data.User, ScriptSettings.TTSUserCooldown)
-	    					Parent.AddCooldown(ScriptName, ScriptSettings.TTSCommand, ScriptSettings.TTSCooldown)
 
 	# End of execute
 	return
@@ -636,9 +739,13 @@ def OpenReadMe():
     """Open the README.txt in the scripts folder"""
     os.startfile(os.path.join(os.path.dirname(__file__), "README.txt"))
 
-def OpenBannedFile():
+def OpenBannedWordFile():
 	"""Open the banned.txt in the scripts folder"""
-	os.startfile(os.path.join(os.path.dirname(__file__), "banned.txt"))
+	os.startfile(BannedWordFile)
+
+def OpenBannedUserFile():
+	"""Open the users.txt in the scripts folder"""
+	os.startfile(BannedUserFile)
 
 def OpenAnimateDemo():
 	"""Open Animation Demo Website"""

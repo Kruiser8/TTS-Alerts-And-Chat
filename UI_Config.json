@@ -28,6 +28,20 @@
     "tooltip": "Set the speaking rate of the TTS",
     "group": "Text-To-Speech Settings"
   },
+  "MaxCharacters": {
+    "type": "numberbox",
+    "label": "Maximum Characters",
+    "value": 0,
+    "tooltip": "Set the maximum number of characters in a TTS message. Use 0 for no limit.",
+    "group": "Text-To-Speech Settings"
+  },
+  "MaxCharacterMessage": {
+    "type": "textbox",
+    "value": "{user}, your message was too long for text-to-speech.",
+    "label": "Maximum Characters Message",
+    "tooltip": "The message that the bot will read a tts message contains more than the max characters. \r\n {user} = username",
+    "group": "Text-To-Speech Settings"
+  },
   "TTSCommand": {
     "type": "textbox",
     "value": "!tts",
@@ -212,6 +226,13 @@
     "tooltip": "Enable to not display alert text-to-speech on the overlay.",
     "group": "TTS Overlay"
   },
+  "TTSOverlayMessage": {
+    "type": "textbox",
+    "value": "{user} says, {message}",
+    "label": "Overlay Message Format",
+    "tooltip": "The message that the bot will display on the overlay for tts command and chat messages.\r\nNOTE: This does not apply for alert tts.\r\n {user} = username\r\n {message} = the chat message",
+    "group": "TTS Overlay"
+  },
   "TTSOverlayTime": {
     "type": "numberbox",
     "label": "Seconds to Display",
@@ -223,6 +244,34 @@
     "type": "colorpicker",
     "label": "Font Color",
     "value": "rgba(255,255,255,1.0)",
+    "tooltip": "",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayUseFontOutline": {
+    "type": "checkbox",
+    "value": false,
+    "label": "Use Font Outline",
+    "tooltip": "Enable to use the below font outline color on the overlay.",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayFontOutline": {
+    "type": "colorpicker",
+    "label": "Font Outline",
+    "value": "rgba(0,0,0,0)",
+    "tooltip": "",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayUseFontShadow": {
+    "type": "checkbox",
+    "value": true,
+    "label": "Use Font Shadow",
+    "tooltip": "Enable to use the below font shadow color on the overlay.",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayFontShadow": {
+    "type": "colorpicker",
+    "label": "Font Shadow",
+    "value": "rgba(0,0,0,1.0)",
     "tooltip": "",
     "group": "TTS Overlay"
   },
@@ -266,6 +315,30 @@
     "label": "Border Color",
     "value": "rgba(255,255,255,1.0)",
     "tooltip": "",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayHorizontalAlign": {
+    "type": "dropdown",
+    "value": "center",
+    "items": [
+      "left",
+      "center",
+      "right"
+    ],
+    "label": "Horizontal Align",
+    "tooltip": "Select where (horizontally) the overlay appears in the browser source.",
+    "group": "TTS Overlay"
+  },
+  "TTSOverlayVerticalAlign": {
+    "type": "dropdown",
+    "value": "center",
+    "items": [
+      "top",
+      "center",
+      "bottom"
+    ],
+    "label": "Vertical Align",
+    "tooltip": "Select where (vertically) the overlay appears in the browser source.",
     "group": "TTS Overlay"
   },
   "TTSOverlayAnimateIn": {
@@ -735,6 +808,86 @@
     "tooltip": "The alert format.\r\n{name} = Donator Username\r\n{amount} = Amount of money donated",
     "group": "Youtube Superchat"
   },
+  "BanUserCommand": {
+    "type": "textbox",
+    "value": "!banuser",
+    "label": "Command Name",
+    "tooltip": "The command used to ban or unban users from triggering TTS.\r\nBans if the user is not already in the file\r\nUnbans if the user is already banned.",
+    "group": "Banned Users"
+  },
+  "BanUserCommandPermission": {
+    "type": "dropdown",
+    "value": "Caster",
+    "items": [
+      "Everyone",
+      "Regular",
+      "VIP Exclusive",
+      "VIP+",
+      "Subscriber",
+      "GameWisp Subscriber",
+      "User_Specific",
+      "Min_Rank",
+      "Min_Points",
+      "Min_Hours",
+      "Moderator",
+      "Editor",
+      "Caster"
+    ],
+    "label": "Permission level",
+    "tooltip": "Set the permission level for the command",
+    "group": "Banned Users"
+  },
+  "BanUserCommandPermissionInfo": {
+    "type": "textbox",
+    "value": "",
+    "label": "Permission level info",
+    "tooltip": "Set the user, rank, or tier for permission",
+    "group": "Banned Users"
+  },
+  "OpenBannedUserFile": {
+    "type": "button",
+    "label": "Open users.txt",
+    "tooltip": "Opens the text file of banned users",
+    "function": "OpenBannedUserFile",
+    "wsevent": "",
+    "group": "Banned Users"
+  },
+  "BanWordCommand": {
+    "type": "textbox",
+    "value": "!banword",
+    "label": "Command Name",
+    "tooltip": "The command used to ban or unban words in TTS.\r\nBans if the word is not already in the file\r\nUnbans if the word is already banned.",
+    "group": "Banned Words"
+  },
+  "BanWordCommandPermission": {
+    "type": "dropdown",
+    "value": "Caster",
+    "items": [
+      "Everyone",
+      "Regular",
+      "VIP Exclusive",
+      "VIP+",
+      "Subscriber",
+      "GameWisp Subscriber",
+      "User_Specific",
+      "Min_Rank",
+      "Min_Points",
+      "Min_Hours",
+      "Moderator",
+      "Editor",
+      "Caster"
+    ],
+    "label": "Permission level",
+    "tooltip": "Set the permission level for the command",
+    "group": "Banned Words"
+  },
+  "BanWordCommandPermissionInfo": {
+    "type": "textbox",
+    "value": "",
+    "label": "Permission level info",
+    "tooltip": "Set the user, rank, or tier for permission",
+    "group": "Banned Words"
+  },
   "BannedAction": {
     "type": "dropdown",
     "value": "Skip Messages with Banned Words",
@@ -760,11 +913,11 @@
     "tooltip": "The text used to replace banned words.",
     "group": "Banned Words"
   },
-  "OpenBannedFile": {
+  "OpenBannedWordFile": {
     "type": "button",
     "label": "Open banned.txt",
     "tooltip": "Opens the text file of banned words",
-    "function": "OpenBannedFile",
+    "function": "OpenBannedWordFile",
     "wsevent": "",
     "group": "Banned Words"
   },

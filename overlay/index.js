@@ -21,15 +21,39 @@ function animateOut(selector, animationOut) {
   });
 }
 
+function translateAlignment(alignment, isHorizontal) {
+  if (isHorizontal) {
+    var hAlignments = {
+      'left': 'flex-start',
+      'center': 'center',
+      'right': 'flex-end'
+    }
+    return hAlignments[alignment];
+  } else {
+    var vAlignments = {
+      'top': 'flex-start',
+      'center': 'center',
+      'bottom': 'flex-end'
+    }
+    return vAlignments[alignment];
+  }
+}
+
 var animationQueue = async.queue(async function (data, callback) {
   $('.overlay').css({
+    'justify-content': translateAlignment(data.horizontalAlign, true),
+    'align-items': translateAlignment(data.verticalAlign, false)
+  });
+  $('#message').css({
     'background': data.useBackground ? data.background : 'transparent',
     'border-color': data.useBorder ? data.border : 'transparent',
     'border-style': data.useBorder ? 'solid' : 'none',
     'color': data.fontColor,
+    '-webkit-text-stroke': data.useOutline ? '1px ' + data.fontOutline : 'transparent',
+    'text-shadow': data.useShadow ? '1px 1px 3px ' + data.fontShadow : 'none',
     'font-size': data.fontSize,
     'font-family': data.font ? data.font : 'Courier New'
-  })
+  });
   $('#message').text(data.message);
   animateIn('.overlay', data.animateIn);
   await timeout(1000 + data.time * 1000);

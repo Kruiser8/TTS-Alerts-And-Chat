@@ -49,6 +49,14 @@ Set the volume of the narrator.
 ### Speaking Rate
 Set the pace of how fast the narrator should speak.
 
+### Maximum Characters
+Set the maximum number of characters in a TTS message. This only applies to text-to-speech triggered by the command or chat message. This does not apply to alert messages.
+
+Use 0 for no limit on characters.
+
+### Maximum Characters Message
+Message to send to viewers when a TTS message is too long.
+
 ## TTS Command
 In this section, you can customize a command that uses text-to-speech.
 
@@ -138,7 +146,12 @@ Text-to-speech messages can be displayed on a customizable overlay.
 ### Exclude Alerts from Overlay
 Enable this to not display alert text-to-speech messages on the overlay.
 
-### Font Color, Font Size, Font Family
+### Overlay Message Format
+Use this to format the message displayed on the overlay when triggered via command, chat messages, or messages included with alerts.
+
+**Note:** This format will not apply to alert responses but WILL apply for messages included with alerts.
+
+### Font Color, Font Outline, Font Shadow, Font Size, Font Family
 Customize how the font looks on the overlay. Font family must be an available font on your computer.
 
 ### Background Color
@@ -146,6 +159,9 @@ Set the background color of the overlay.
 
 ### Border Color
 Set the border color of the overlay.
+
+### Horizontal/Vertical Align
+Control the positioning of the overlay within the browser source by aligning the overlay to the left, center, or right and top, center, or bottom.
 
 ### Animate In/Out
 Choose which animate.css animations to use when displaying the overlay.
