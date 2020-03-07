@@ -3,6 +3,9 @@
 
 """ Text-To-Speech for Alerts and Chat Messages
 
+	1.1.2
+		Support ascii characters in overlay
+
 	1.1.1
 		Control overlay position/message, ban users, and set a character limit
 
@@ -300,7 +303,7 @@ def handleEvent(sender, args):
 				SendTTSMessagesWithDelay(ttsMessage, ScriptSettings.TwitchSubDelay, ScriptSettings.TwitchIncludeSubMessage, message.Message, message.Name)
 
 			except Exception as e:
-				Parent.SendStreamWhisper(Parent.GetChannelName(), 'TTS Failed, please see logs')
+				Parent.SendStreamWhisper(Parent.GetChannelName(), 'Failed to process subscription. Please see logs (i).')
 				Parent.Log(ScriptName, str(e.args))
 
 	elif evntdata and evntdata.For == "mixer_account":
@@ -389,6 +392,7 @@ def updateBannedSettings():
 
 def SendOverlayUpdate(message):
 	""" Send updated information to the overlay. """
+	message = message.encode('utf8', 'replace')
 	payload = {
 		'message': message,
 		'time': ScriptSettings.TTSOverlayTime,
@@ -426,6 +430,7 @@ def SendTTSMessage(voice, message, isAlert, user = '', text = '', displayName = 
 			return
 	else:
 		message = reBanned.sub(ScriptSettings.BannedReplacement, message)
+
 	try:
 		if (isAlert and not ScriptSettings.TTSOverlayExcludeAlerts) or (not isAlert and not user):
 			SendOverlayUpdate(message)
@@ -434,7 +439,7 @@ def SendTTSMessage(voice, message, isAlert, user = '', text = '', displayName = 
 
 		voice.Speak(message)
 	except Exception as e:
-		Parent.SendStreamWhisper(Parent.GetChannelName(), 'TTS Failed, please see logs')
+		Parent.SendStreamWhisper(Parent.GetChannelName(), 'TTS Failed, please see the script logs (i).')
 		Parent.Log(ScriptName, str(e.args))
 
 def SendTTSMessagesWithDelay(message, delay, includeExtra = False, extraMessage = '', user = ''):
