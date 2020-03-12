@@ -3,6 +3,9 @@
 
 """ Text-To-Speech for Alerts and Chat Messages
 
+	1.1.3
+		Fixed bug where banned words showed on overlay
+
 	1.1.2
 		Support ascii characters in overlay
 
@@ -41,7 +44,7 @@ ScriptName = "TTS Alerts and Chat"
 Website = "https://www.twitch.tv/kruiser8"
 Description = "Text-to-speech for streamlabs alerts and chat messages."
 Creator = "Kruiser8"
-Version = "1.1.1"
+Version = "1.1.3"
 
 #---------------------------------------
 # Script Variables
@@ -430,6 +433,8 @@ def SendTTSMessage(voice, message, isAlert, user = '', text = '', displayName = 
 			return
 	else:
 		message = reBanned.sub(ScriptSettings.BannedReplacement, message)
+		text = reBanned.sub(ScriptSettings.BannedReplacement, text)
+		displayName = reBanned.sub(ScriptSettings.BannedReplacement, displayName)
 
 	try:
 		if (isAlert and not ScriptSettings.TTSOverlayExcludeAlerts) or (not isAlert and not user):
