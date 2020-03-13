@@ -3,6 +3,11 @@
 
 """ Text-To-Speech for Alerts and Chat Messages
 
+	1.1.4
+		Fixed bug adding unicode characters to banned words list
+		Added setting for ban messages
+		Added ability to ban users for a time
+
 	1.1.3
 		Fixed bug where banned words showed on overlay
 
@@ -44,7 +49,7 @@ ScriptName = "TTS Alerts and Chat"
 Website = "https://www.twitch.tv/kruiser8"
 Description = "Text-to-speech for streamlabs alerts and chat messages."
 Creator = "Kruiser8"
-Version = "1.1.3"
+Version = "1.1.4"
 
 #---------------------------------------
 # Script Variables
@@ -184,9 +189,13 @@ class Settings(object):
 			self.BanUserCommand = "!banuser"
 			self.BanUserCommandPermission = "Caster"
 			self.BanUserCommandPermissionInfo = ""
+			self.BanUserAddResponse = "The user was banned from using TTS."
+			self.BanUserResponseResponse = "The user is now able to use TTS."
 			self.BanWordCommand = "!banword"
 			self.BanWordCommandPermission = "Caster"
 			self.BanWordCommandPermissionInfo = ""
+			self.BanWordAddResponse = "The word was added to the banned words list."
+			self.BanWordRemoveResponse = "The word was removed from the banned words list."
 			self.BannedAction = "Skip Messages with Banned Words"
 			self.BannedActionBoolean = True
 			self.BannedMatchWholeWord = True
@@ -460,12 +469,22 @@ def readFileArray(fileToRead):
 	lines = []
 	with open(fileToRead) as f:
 		lines = f.readlines()
-	lines = [x.strip() for x in lines]
+	lines = [x.strip().decode("utf-8", "replace") for x in lines]
 	return lines
 
 def writeArrayToFile(arrayToWrite, fileToWrite):
 	with open(fileToWrite, 'w') as f:
-		f.write('\n'.join(arrayToWrite))
+		f.write('\n'.join(arrayToWrite).encode('utf8', 'replace'))
+
+def handleBanUser(data, user):
+	global bannedUsers
+	if user in bannedUsers:
+		bannedUsers.remove(user)
+		Parent.SendStreamMessage(ScriptSettings.BanUserRemoveResponse.format(user=data.UserName, banned=user))
+	else:
+		bannedUsers.append(user)
+		Parent.SendStreamMessage(ScriptSettings.BanUserAddResponse.format(user=data.UserName, banned=user))
+	writeArrayToFile(bannedUsers, BannedUserFile)
 
 #---------------------------------------
 # Chatbot Initialize Function
@@ -584,15 +603,15 @@ def Execute(data):
 				if message in bannedWords:
 					bannedWords.remove(message)
 					if isPhrase:
-						Parent.SendStreamMessage('Removed the phrase from the list of banned words.')
+						Parent.SendStreamMessage(ScriptSettings.BanWordRemoveResponse.format(user=data.UserName, word=message))
 					else:
-						Parent.SendStreamMessage('Removed the word from the list of banned words.')
+						Parent.SendStreamMessage(ScriptSettings.BanWordRemoveResponse.format(user=data.UserName, word=message))
 				else:
 					bannedWords.append(message)
 					if isPhrase:
-						Parent.SendStreamMessage('Added the phrase to the list of banned words.')
+						Parent.SendStreamMessage(ScriptSettings.BanWordAddResponse.format(user=data.UserName, word=message))
 					else:
-						Parent.SendStreamMessage('Added the word from the list of banned words.')
+						Parent.SendStreamMessage(ScriptSettings.BanWordAddResponse.format(user=data.UserName, word=message))
 				writeArrayToFile(bannedWords, BannedWordFile)
 				updateBannedSettings()
 
@@ -601,14 +620,13 @@ def Execute(data):
 			user = data.GetParam(1).lower()
 
 			if user:
-				global bannedUsers
-				if user in bannedUsers:
-					bannedUsers.remove(user)
-					Parent.SendStreamMessage('Removed the user.')
-				else:
-					bannedUsers.append(user)
-					Parent.SendStreamMessage('Added the user.')
-				writeArrayToFile(bannedUsers, BannedUserFile)
+				handleBanUser(data, user)
+				if data.GetParamCount() > 2:
+					time = data.GetParam(2)
+					if time.isdigit():
+						banThread = threading.Timer(int(time), handleBanUser, args=(data, user))
+						banThread.daemon = True
+						banThread.start()
 
 		if ScriptSettings.TTSAllChat and IsFromValidSource(data, ScriptSettings.TTSAllChatUsage, ScriptSettings.TTSAllChatUsageReply, ScriptSettings.TTSAllChatUsageReplyMessage):
 			if not ScriptSettings.TTSAllChatExcludeCommands or command[0] != '!':

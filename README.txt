@@ -6,9 +6,13 @@ The text-to-speech uses your computer's narrator voice and has some customizatio
 
 Feel free to reach out to me in the [Streamlabs Chatbot discord](https://discord.gg/xFcsxft) (@Kruiser8) or on Twitter ([@Kruiser8](https://twitter.com/kruiser8)) with any questions or feedback.
 
+***
+
 # Credits
 
 Thanks to [Ocgineer](https://github.com/ocgineer) for his [Streamlabs Event Receiver](https://github.com/ocgineer/Streamlabs-Events-Receiver) that allows events to be caught in a Streamlabs Chatbot script.
+
+***
 
 # Installation
 
@@ -17,6 +21,8 @@ https://github.com/StreamlabsSupport/Streamlabs-Chatbot/wiki/Prepare-&-Import-Sc
 
 For setting up the text-to-speech overlay:
 https://github.com/StreamlabsSupport/Streamlabs-Chatbot/wiki/Script-overlays
+
+***
 
 # Usage
 
@@ -57,6 +63,8 @@ Use 0 for no limit on characters.
 ### Maximum Characters Message
 Message to send to viewers when a TTS message is too long.
 
+***
+
 ## TTS Command
 In this section, you can customize a command that uses text-to-speech.
 
@@ -77,6 +85,8 @@ Customize the message read by the narrator. The following variables will get rep
 - *{user}* will be replaced with the viewer's username
 - *{message}* will be replaced with the chat message
 
+***
+
 ## TTS Command Usage
 In this section, you can customize the usage for the TTS Command that uses text-to-speech.
 
@@ -88,6 +98,8 @@ Enable this to send a message to a viewer when they attempt to trigger the comma
 
 ### Usage Reply Message
 This is the message to send to a viewer who triggers the command from an invalid location.
+
+***
 
 ## TTS Command Cooldown
 In this section, you can customize a cooldown for the TTS Command that uses text-to-speech.
@@ -114,6 +126,8 @@ The message that the bot will display when the command is on user cooldown
 - *{user}* will be replaced with the viewer's username
 - *{cooldown}* will be replaced with the time remaining
 
+***
+
 ## TTS Chat Messages
 In this section, you can toggle text-to-speech for ALL chat messages
 
@@ -128,6 +142,8 @@ Customize the message read by the narrator. The following variables will get rep
 - *{user}* will be replaced with the viewer's username
 - *{message}* will be replaced with the chat message
 
+***
+
 ## TTS Chat Messages Usage
 In this section, you can customize the usage for triggering text-to-speech via a message.
 
@@ -139,6 +155,8 @@ Enable this to send a message to a viewer when they attempt to trigger the comma
 
 ### Usage Reply Message
 This is the message to send to a viewer who triggers the command from an invalid location.
+
+***
 
 ## TTS Overlay
 Text-to-speech messages can be displayed on a customizable overlay.
@@ -166,6 +184,8 @@ Control the positioning of the overlay within the browser source by aligning the
 ### Animate In/Out
 Choose which animate.css animations to use when displaying the overlay.
 
+***
+
 ## Alert Types
 There are alert types across Mixer, Streamlabs, Twitch, and Youtube that are customizable. To save space, below is a summary of setting types.
 
@@ -187,7 +207,37 @@ The format of the alert to be read by text-to-speech. There are a number of vari
 - *{gifter}* is the gifter of a Twitch sub
 - *{recipients}* is the comma-delimited list of viewers that are gifted subs when more than 1 sub is gifted to the channel
 
+***
+
+## Banned Users
+
+### Banned Users Command Name, Permission, and Permission Info
+Use these to customize the command used to ban users. The command is used as follows:
+
+`!banuser kruiser8` - to ban/unban the user named kruiser8
+`!banuser kruiser8 300` - to ban/unban the user named kruiser8 for 300 seconds
+
+### Open users.txt
+Edit this file to control and view which users are banned from TTS.
+
+### User Banned Response
+The message sent in chat when a user is banned from using TTS.
+- *{user}* will be replaced with the user who used the !banuser command
+- *{banned}* will be replaced with a user that was banned
+
+### User Unbanned Response
+The message sent in chat when a user is unbanned from using TTS.
+- *{user}* will be replaced with the user who used the !banuser command
+- *{banned}* will be replaced with a user that was unbanned
+
+***
+
 ## Banned Words
+
+### Banned Word Command Name, Permission, and Permission Info
+Use these to customize the command used to ban words and phrases. The command is used as follows:
+
+`!banword toy` - to ban/unban the word `toy`
 
 ### Banned Words Setting
 Choose whether to skip messages with banned words or replace the words.
@@ -200,6 +250,18 @@ This field is used to replace banned words when found in messages if *Replace Ba
 
 ### Open banned.txt
 Edit this file to control what words or phrases are banned from TTS. Each banned word or phrase should be on its own line.
+
+### Word Banned Response
+The message sent in chat when a word is banned from use in TTS.
+- *{user}* will be replaced with the user who used the !banword command
+- *{word}* will be replaced with a word that was banned
+
+### Word Unbanned Response
+The message sent in chat when a word is unbanned from use in TTS.
+- *{user}* will be replaced with the user who used the !banword command
+- *{word}* will be replaced with the word that was unbanned
+
+***
 
 ## Streamlabs Token
 
